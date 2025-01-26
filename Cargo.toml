@@ -2,6 +2,8 @@
 name = "jscontact"
 version = "0.1.0"
 edition = "2021"
+description = "RFC 9553"
+license = "MIT"
 
 [dependencies]
 serde = { version = "1.0.217", features = ["derive"] }

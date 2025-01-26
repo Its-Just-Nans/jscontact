@@ -1,0 +1,20 @@
+{
+    "@type": "Card",
+    "version": "1.0",
+    "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
+    "addresses": {
+        "k25": {
+            "components": [
+                { "kind": "number", "value": "46" },
+                { "kind": "name", "value": "1 Sukhumvit 51 Alley" },
+                { "kind": "subdistrict", "value": "Khlong Tan Nuea" },
+                { "kind": "district", "value": " Watthana" },
+                { "kind": "locality", "value": "Bangkok" },
+                { "kind": "country", "value": "Thailand" },
+                { "kind": "postcode", "value": "10110" }
+            ],
+            "defaultSeparator": ", ",
+            "isOrdered": true
+        }
+    }
+}

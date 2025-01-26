@@ -16,4 +16,4 @@ jobs:
             - name: Check spelling of entire workspace
               uses: crate-ci/typos@master
               with:
-                  config: .github/typos.yml
+                  config: .github/typos.toml

@@ -42,6 +42,8 @@ pub struct Card {
     pub phones: Option<HashMap<String, Phone>>,
     /// Preferred languages for communication.
     pub preferred_languages: Option<HashMap<String, LanguagePref>>,
+    /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
+    pub localizations: Option<HashMap<String, HashMap<String, String>>>,
 }
 
 /// Represents the Relation object for associating related Cards.

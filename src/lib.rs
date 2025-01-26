@@ -7,7 +7,7 @@ use std::collections::HashMap;
 pub struct Card {
     /// The JSContact type of the Card object. Must be "Card".
     #[serde(rename = "@type")]
-    pub card_type: String,
+    card_type: String,
     /// The JSContact version of this Card.
     pub version: String,
     /// A unique identifier for the Card.
@@ -50,7 +50,7 @@ pub struct Card {
 pub struct Relation {
     /// The JSContact type of the object. Must be "Relation".
     #[serde(rename = "@type")]
-    pub relation_type: Option<String>,
+    relation_type: Option<String>,
     /// The relationship types to related Cards.
     pub relation: Option<HashMap<String, bool>>,
 }
@@ -81,7 +81,7 @@ pub struct Name {
 pub struct NameComponent {
     /// The JSContact type of the object. Must be "NameComponent".
     #[serde(rename = "@type")]
-    pub component_type: Option<String>,
+    component_type: Option<String>,
     /// The value of the name component (e.g., "John").
     pub value: String,
     /// The kind of the name component (e.g., given, surname).
@@ -96,7 +96,7 @@ pub struct NameComponent {
 pub struct Nickname {
     /// The JSContact type of the object. Must be "Nickname".
     #[serde(rename = "@type")]
-    pub nickname_type: Option<String>,
+    nickname_type: Option<String>,
     /// The nickname value.
     pub name: String,
     /// Contexts in which to use the nickname.
@@ -111,7 +111,7 @@ pub struct Nickname {
 pub struct Organization {
     /// The JSContact type of the object. Must be "Organization".
     #[serde(rename = "@type")]
-    pub org_type: Option<String>,
+    org_type: Option<String>,
     /// The name of the organization.
     pub name: Option<String>,
     /// Organizational units within the organization.
@@ -128,7 +128,7 @@ pub struct Organization {
 pub struct OrgUnit {
     /// The JSContact type of the object. Must be "OrgUnit".
     #[serde(rename = "@type")]
-    pub unit_type: Option<String>,
+    unit_type: Option<String>,
     /// The name of the organizational unit.
     pub name: String,
     /// Custom sorting order for the organizational unit.
@@ -141,7 +141,7 @@ pub struct OrgUnit {
 pub struct SpeakToAs {
     /// The JSContact type of the object. Must be "SpeakToAs".
     #[serde(rename = "@type")]
-    pub speak_to_as_type: Option<String>,
+    speak_to_as_type: Option<String>,
     /// Grammatical gender to use in salutations.
     pub grammatical_gender: Option<String>,
     /// Pronouns associated with the entity.
@@ -154,7 +154,7 @@ pub struct SpeakToAs {
 pub struct Pronouns {
     /// The JSContact type of the object. Must be "Pronouns".
     #[serde(rename = "@type")]
-    pub pronoun_type: Option<String>,
+    pronoun_type: Option<String>,
     /// The pronouns value (e.g., "they/them").
     pub pronouns: String,
     /// Contexts in which to use the pronouns.
@@ -169,7 +169,7 @@ pub struct Pronouns {
 pub struct Title {
     /// The JSContact type of the object. Must be "Title".
     #[serde(rename = "@type")]
-    pub title_type: Option<String>,
+    title_type: Option<String>,
     /// The title or role name.
     pub name: String,
     /// The kind of title (e.g., title, role).
@@ -184,7 +184,7 @@ pub struct Title {
 pub struct EmailAddress {
     /// The JSContact type of the object. Must be "EmailAddress".
     #[serde(rename = "@type")]
-    pub email_type: Option<String>,
+    email_type: Option<String>,
     /// The email address.
     pub address: String,
     /// Contexts in which to use the email address.
@@ -201,7 +201,7 @@ pub struct EmailAddress {
 pub struct OnlineService {
     /// The JSContact type of the object. Must be "OnlineService".
     #[serde(rename = "@type")]
-    pub service_type: Option<String>,
+    service_type: Option<String>,
     /// The name of the online service or protocol.
     pub service: Option<String>,
     /// The URI identifying the entity on the service.
@@ -222,7 +222,7 @@ pub struct OnlineService {
 pub struct Phone {
     /// The JSContact type of the object. Must be "Phone".
     #[serde(rename = "@type")]
-    pub phone_type: Option<String>,
+    phone_type: Option<String>,
     /// The phone number, either as a URI or free text.
     pub number: String,
     /// Contact features the phone number supports (e.g., voice, text).
@@ -241,7 +241,7 @@ pub struct Phone {
 pub struct LanguagePref {
     /// The JSContact type of the object. Must be "LanguagePref".
     #[serde(rename = "@type")]
-    pub lang_pref_type: Option<String>,
+    lang_pref_type: Option<String>,
     /// The preferred language as a language tag (e.g., en, fr).
     pub language: String,
     /// Contexts in which to use the preferred language.

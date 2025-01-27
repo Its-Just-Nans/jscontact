@@ -1,4 +1,5 @@
 use std::fs;
+use std::os::linux::raw;
 use std::path::Path;
 
 const JSON_DEFAULT_CARD: &str = r#"
@@ -54,7 +55,11 @@ fn main() {
     if std::env::var("DOCS_RS").is_ok() {
         return;
     }
-    let raws = fs::read_dir("./tests/rfc9553/raws").unwrap();
+    let raw_dir = fs::read_dir("./tests/rfc9553/raws");
+    if raw_dir.is_err() {
+        return;
+    }
+    let raws = raw_dir.unwrap();
 
     let dest_path = Path::new("./tests/rfc9553/");
     for one_entry in raws {

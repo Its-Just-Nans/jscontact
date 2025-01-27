@@ -31,7 +31,7 @@
 
 #![deny(
     // missing_docs,
-    // clippy::all,
+    clippy::all,
     clippy::missing_docs_in_private_items,
     clippy::missing_errors_doc,
     clippy::missing_panics_doc,
@@ -115,6 +115,7 @@ pub struct Card {
 }
 
 impl Card {
+    /// Creates a new Card object with the specified version and unique identifier.
     pub fn new(version: CardVersion, uid: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -152,6 +153,7 @@ impl Card {
         }
     }
 
+    /// Creates a new Card object with the latest version and the specified unique identifier.
     pub fn new_with_latest_version(uid: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -162,8 +164,10 @@ impl Card {
     }
 }
 
+/// Represents the card version.
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum CardVersion {
+    /// version 1.0
     #[serde(rename = "1.0")]
     OneDotZero,
 }
@@ -177,18 +181,21 @@ pub struct Calendar {
     calendar_type: Option<CalendarType>,
     pub kind: Option<CalendarKind>,
     pub uri: String,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
+/// Calendar @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum CalendarType {
+    /// Calendar @type
     Calendar,
 }
 
 impl Calendar {
+    /// Creates a new Calendar object with the specified URI.
     pub fn new(uri: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -202,10 +209,13 @@ impl Calendar {
     }
 }
 
+/// Calendar kind
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum CalendarKind {
+    /// The resource is a calendar that contains entries such as calendar events or tasks.
     Calendar,
+    /// The resource allows for free-busy lookups, for example, to schedule group events.
     FreeBusy,
 }
 
@@ -217,14 +227,16 @@ pub struct SchedulingAddress {
     #[serde(rename = "@type")]
     scheduling_address_type: Option<SchedulingAddressType>,
     pub uri: String,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
+/// SchedulingAddress @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SchedulingAddressType {
+    /// SchedulingAddress @type
     SchedulingAddress,
 }
 
@@ -245,18 +257,18 @@ impl SchedulingAddress {
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum CardKind {
-    /// a single person
-    Individual,
-    /// a group of people or entities
-    Group,
-    /// an organization
-    Org,
-    /// a named location
-    Location,
-    /// a device such as an appliance, a computer, or a network element
-    Device,
     /// a software application
     Application,
+    /// a device such as an appliance, a computer, or a network element
+    Device,
+    /// a group of people or entities
+    Group,
+    /// a single person
+    Individual,
+    /// a named location
+    Location,
+    /// an organization
+    Org,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -268,18 +280,21 @@ pub struct CryptoKey {
     crypto_key_type: Option<CryptoKeyType>,
     pub uri: String,
     pub kind: Option<String>,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
+/// CryptoKey @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum CryptoKeyType {
+    /// CryptoKey @type
     CryptoKey,
 }
 
 impl CryptoKey {
+    /// Creates a new CryptoKey object with the specified URI.
     pub fn new(uri: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -302,15 +317,17 @@ pub struct Directory {
     directory_type: Option<DirectoryType>,
     pub kind: Option<DirectoryKind>,
     pub uri: String,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
     pub list_as: Option<u64>,
 }
 
+/// Directory @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum DirectoryType {
+    /// Directory @type
     Directory,
 }
 
@@ -342,7 +359,7 @@ pub enum LocalizationObject {
     /// Priority
     /// The key is the path of the property to localize, and the value is the localized value.
     PatchObject(HashMap<String, String>),
-    PatchObject2(HashMap<String, Address>),
+    PatchObjectAddress(HashMap<String, Address>),
     Name {
         name: Name,
     },
@@ -370,11 +387,29 @@ pub enum LocalizationObject {
     LanguagePref {
         preferred_languages: LanguagePref,
     },
-    Media {
-        media: Media,
+    Calendar {
+        calendars: Calendar,
+    },
+    SchedulingAddress {
+        scheduling_addresses: SchedulingAddress,
     },
     Anniversary {
         anniversaries: Anniversary,
+    },
+    Address {
+        addresses: Address,
+    },
+    CryptoKey {
+        crypto_keys: CryptoKey,
+    },
+    Directory {
+        directories: Directory,
+    },
+    Link {
+        links: Link,
+    },
+    Media {
+        media: Media,
     },
     Note {
         notes: Note,
@@ -394,14 +429,16 @@ pub struct Media {
     pub kind: MediaKind,
     pub uri: String,
     pub media_type: Option<String>,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
+/// Media @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum MediaType {
+    /// Media @type
     Media,
 }
 
@@ -420,11 +457,15 @@ impl Media {
     }
 }
 
+/// Media kind
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum MediaKind {
+    /// the resource is a photograph or avatar.
     Photo,
+    /// the resource is audio media, e.g., to specify the proper pronunciation of the name property contents.
     Sound,
+    /// the resource is a graphic image or logo associated with the entity represented by the Card.
     Logo,
 }
 
@@ -437,21 +478,23 @@ pub struct Link {
     link_type: Option<LinkType>,
     pub kind: Option<LinkKind>,
     pub uri: String,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
+/// Link @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum LinkType {
+    /// Link @type
     Link,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Resource {
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
@@ -471,6 +514,7 @@ impl From<Resource> for Link {
 }
 
 impl Link {
+    /// Creates a new Link object with the specified URI.
     pub fn new(uri: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -495,9 +539,42 @@ pub struct Relation {
     /// The JSContact type of the object. Must be "Relation".
     #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    relation_type: Option<String>,
+    relation_type: Option<RelationType>,
     /// The relationship types to related Cards.
-    pub relation: Option<HashMap<String, bool>>,
+    pub relation: Option<HashMap<RelationshipType, bool>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "lowercase")]
+pub enum RelationshipType {
+    Acquaintance,
+    Agent,
+    Child,
+    #[serde(rename = "co-resident")]
+    CoResident,
+    #[serde(rename = "co-worker")]
+    CoWorker,
+    Colleague,
+    Contact,
+    Crush,
+    Date,
+    Emergency,
+    Friend,
+    Kin,
+    Me,
+    Met,
+    Muse,
+    Neighbor,
+    Parent,
+    Sibling,
+    Spouse,
+    Sweetheart,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum RelationType {
+    Relation,
 }
 
 /// Defines the Name object, which contains information about the entity's name components.
@@ -521,7 +598,19 @@ pub struct Name {
     /// The script used in the phonetic property.
     pub phonetic_script: Option<String>,
     /// The phonetic system used in the phonetic property.
-    pub phonetic_system: Option<String>,
+    pub phonetic_system: Option<PhoneticSystem>,
+}
+
+/// The phonetic system used in the related value of the phonetic property.
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum PhoneticSystem {
+    /// International Phonetic Alphabet
+    Ipa,
+    /// Cantonese romanization system "Jyutping"
+    Jyut,
+    /// Standard Mandarin romanization system "Hanyu Pinyin".
+    Piny,
 }
 
 impl Default for Name {
@@ -584,14 +673,14 @@ pub enum NameComponentType {
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum NameComponentKind {
-    Title,
-    Given,
-    Given2,
-    Surname,
-    Surname2,
     Credential,
     Generation,
+    Given,
+    Given2,
     Separator,
+    Surname,
+    Surname2,
+    Title,
 }
 
 /// Defines the Nickname object, which includes nicknames for the entity.
@@ -605,7 +694,7 @@ pub struct Nickname {
     /// The nickname value.
     pub name: String,
     /// Contexts in which to use the nickname.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the nickname relative to others.
     pub pref: Option<u32>,
 }
@@ -631,7 +720,7 @@ pub struct Organization {
     /// Custom sorting order for the organization.
     pub sort_as: Option<String>,
     /// Contexts in which the organization is relevant.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
 }
 
 #[cfg(feature = "typed")]
@@ -680,9 +769,22 @@ pub struct SpeakToAs {
     #[serde(rename = "@type")]
     speak_to_as_type: Option<SpeakToAsType>,
     /// Grammatical gender to use in salutations.
-    pub grammatical_gender: Option<String>,
+    pub grammatical_gender: Option<GrammaticalGender>,
     /// Pronouns associated with the entity.
     pub pronouns: Option<HashMap<String, Pronouns>>,
+}
+
+/// The grammatical gender to use in salutations and other grammatical constructs.
+/// For example, the German language distinguishes by grammatical gender in salutations such as "Sehr geehrte" (feminine) and "Sehr geehrter" (masculine).
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum GrammaticalGender {
+    Animate,
+    Common,
+    Feminine,
+    Inanimate,
+    Masculine,
+    Neuter,
 }
 
 #[cfg(feature = "typed")]
@@ -702,7 +804,7 @@ pub struct Pronouns {
     /// The pronouns value (e.g., "they/them").
     pub pronouns: String,
     /// Contexts in which to use the pronouns.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the pronouns relative to others.
     pub pref: Option<u32>,
 }
@@ -741,13 +843,16 @@ pub struct Title {
     pub organization_id: Option<String>,
 }
 
+/// Title @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum TitleType {
+    /// Title @type
     Title,
 }
 
 impl Title {
+    /// Creates a new Title object with the specified name.
     pub fn new(name: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -759,11 +864,12 @@ impl Title {
     }
 }
 
+/// Title kind
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum TitleKind {
-    Title,
     Role,
+    Title,
 }
 
 /// Defines email addresses associated with the entity.
@@ -777,16 +883,18 @@ pub struct EmailAddress {
     /// The email address.
     pub address: String,
     /// Contexts in which to use the email address.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the email address relative to others.
     pub pref: Option<u32>,
     /// Custom label for the email address.
     pub label: Option<String>,
 }
 
+/// EmailAddress @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum EmailAddressType {
+    /// EmailAddress @type
     EmailAddress,
 }
 
@@ -818,16 +926,18 @@ pub struct OnlineService {
     /// The username or handle on the online service.
     pub user: Option<String>,
     /// Contexts in which to use the online service.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the service relative to others.
     pub pref: Option<u32>,
     /// Custom label for the online service.
     pub label: Option<String>,
 }
 
+/// OnlineService @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum OnlineServiceType {
+    /// OnlineService @type
     OnlineService,
 }
 
@@ -842,22 +952,46 @@ pub struct Phone {
     /// The phone number, either as a URI or free text.
     pub number: String,
     /// Contact features the phone number supports (e.g., voice, text).
-    pub features: Option<HashMap<String, bool>>,
+    pub features: Option<HashMap<PhoneFeature, bool>>,
     /// Contexts in which to use the phone number.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the phone number relative to others.
     pub pref: Option<u32>,
     /// Custom label for the phone number.
     pub label: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "camelCase")]
+pub enum PhoneFeature {
+    Fax,
+    #[serde(rename = "main-number")]
+    MainNumber,
+    Mobile,
+    Pager,
+    Text,
+    Textphone,
+    Video,
+    Voice,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "lowercase")]
+pub enum Context {
+    Private,
+    Work,
+}
+
+/// Phone @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum PhoneType {
+    /// Phone @type
     Phone,
 }
 
 impl Phone {
+    /// Creates a new Phone object with the specified phone number.
     pub fn new(number: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -882,18 +1016,21 @@ pub struct LanguagePref {
     /// The preferred language as a language tag (e.g., en, fr).
     pub language: String,
     /// Contexts in which to use the preferred language.
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the language relative to others.
     pub pref: Option<u32>,
 }
 
+/// LanguagePref @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum LanguagePrefType {
+    /// LanguagePref @type
     LanguagePref,
 }
 
 impl LanguagePref {
+    /// Creates a new LanguagePref object with the specified language.
     pub fn new(language: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -916,32 +1053,44 @@ pub struct Anniversary {
     /// The date of the anniversary.
     pub date: DateObject,
     /// The type of anniversary (e.g., birthday, work anniversary).
-    pub kind: String,
+    pub kind: AnniversaryKind,
     /// Contexts in which to use the anniversary.
     pub contexts: Option<HashMap<String, bool>>,
     /// Preference of the anniversary relative to others.
     pub place: Option<Address>,
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum AnniversaryKind {
+    Birth,
+    Death,
+    Wedding,
+}
+
+/// Anniversary @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum AnniversaryType {
+    /// Anniversary @type
     Anniversary,
 }
 
 impl Anniversary {
-    pub fn new(date: DateObject, kind: &str) -> Self {
+    /// Creates a new Anniversary object with the specified date and kind.
+    pub fn new(kind: AnniversaryKind, date: DateObject) -> Self {
         Self {
             #[cfg(feature = "typed")]
             anniversary_type: Some(AnniversaryType::Anniversary),
             date,
-            kind: kind.to_string(),
+            kind,
             contexts: None,
             place: None,
         }
     }
 }
 
+/// Represents a date object, which can be a timestamp or a partial date.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum DateObject {
@@ -963,9 +1112,11 @@ pub struct Timestamp {
     pub utc: String,
 }
 
+/// Timestamp @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum TimestampType {
+    /// Timestamp @type
     Timestamp,
 }
 
@@ -998,9 +1149,11 @@ pub struct PartialDate {
     pub calendar_scale: Option<String>,
 }
 
+/// PartialDate @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum PartialDateType {
+    /// PartialDate @type
     PartialDate,
 }
 
@@ -1017,17 +1170,33 @@ pub struct Address {
     pub country_code: Option<String>,
     pub coordinates: Option<String>,
     pub time_zone: Option<String>,
-    pub contexts: Option<HashMap<String, bool>>,
+    pub contexts: Option<HashMap<AddressContext, bool>>,
     pub full: Option<String>,
     pub default_separator: Option<String>,
     pub pref: Option<u64>,
     pub phonetic_script: Option<String>,
-    pub phonetic_system: Option<String>,
+    pub phonetic_system: Option<PhoneticSystem>,
 }
 
+/// The contexts in which to use this address.
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "lowercase")]
+pub enum AddressContext {
+    /// an address to be used for billing.
+    Billing,
+    /// an address to be used for delivering physical items.
+    Delivery,
+    /// may be used in a private context.
+    Private,
+    /// may be used in a professional context.
+    Work,
+}
+
+/// Address @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum AddressType {
+    /// Address @type
     Address,
 }
 
@@ -1043,9 +1212,11 @@ pub struct AddressComponent {
     pub phonetic: Option<String>,
 }
 
+/// AddressComponent @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum AddressComponentType {
+    /// AddressComponent @type
     AddressComponent,
 }
 
@@ -1064,24 +1235,24 @@ impl AddressComponent {
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum AddressComponentKind {
-    Room,
     Apartment,
-    Floor,
-    Building,
-    Number,
-    Name,
     Block,
-    Subdistrict,
-    District,
-    Locality,
-    Region,
-    Postcode,
+    Building,
     Country,
     Direction,
+    District,
+    Floor,
     Landmark,
+    Locality,
+    Name,
+    Number,
+    Postcode,
     #[serde(rename = "postOfficeBox")]
     PostOfficeBox,
+    Region,
+    Room,
     Separator,
+    Subdistrict,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -1096,9 +1267,11 @@ pub struct Note {
     pub author: Option<Author>,
 }
 
+/// Note @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum NoteType {
+    /// Note @type
     Note,
 }
 
@@ -1113,9 +1286,11 @@ pub struct Author {
     pub uri: Option<String>,
 }
 
+/// Author @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum AuthorType {
+    /// Author @type
     Author,
 }
 
@@ -1134,21 +1309,28 @@ pub struct PersonalInfo {
     pub label: Option<String>,
 }
 
+/// The kind of personal information.
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum PersonalInfoKind {
+    /// a field of expertise or a credential
     Expertise,
+    /// a hobby
     Hobby,
+    /// an interest
     Interest,
 }
 
+/// PersonalInfo @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum PersonalInfoType {
+    /// PersonalInfo @type
     PersonalInfo,
 }
 
 impl PersonalInfo {
+    /// Creates a new PersonalInfo object with the specified kind and value.
     pub fn new(kind: PersonalInfoKind, value: &str) -> Self {
         Self {
             #[cfg(feature = "typed")]

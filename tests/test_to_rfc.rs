@@ -10,7 +10,7 @@ mod test {
 
     use jscontact::{
         Card, CardVersion, Name, NameComponent, NameComponentKind, PersonalInfo, PersonalInfoKind,
-        PersonalInfoLevel,
+        PersonalInfoLevel, PhoneticSystem,
     };
 
     #[test]
@@ -29,7 +29,7 @@ mod test {
         let mut name_component_2 = NameComponent::new(NameComponentKind::Surname, "Smith");
         name_component_2.phonetic = Some("/smɪθ/".to_string());
         name.components = Some(vec![name_component_1, name_component_2]);
-        name.phonetic_system = Some("ipa".to_string());
+        name.phonetic_system = Some(PhoneticSystem::Ipa);
         card.name = Some(name);
         let card_value = serde_json::to_value(card).unwrap();
         assert_eq!(verifier, card_value);

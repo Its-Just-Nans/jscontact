@@ -1,9 +1,10 @@
 mod test {
 
     use jscontact::{
-        AddressComponentKind, CalendarKind, Card, CardKind, CardVersion, DateObject, DirectoryKind,
-        LinkKind, LocalizationObject, MediaKind, NameComponentKind, PersonalInfoKind,
-        PersonalInfoLevel, TitleKind,
+        AddressComponentKind, AnniversaryKind, CalendarKind, Card, CardKind, CardVersion, Context,
+        DateObject, DirectoryKind, GrammaticalGender, LinkKind, LocalizationObject, MediaKind,
+        NameComponentKind, PersonalInfoKind, PersonalInfoLevel, PhoneFeature, PhoneticSystem,
+        RelationshipType, TitleKind,
     };
 
     #[test]
@@ -20,7 +21,7 @@ mod test {
         assert_eq!(components[1].kind, NameComponentKind::Surname);
         assert_eq!(components[1].value, "Smith");
         assert_eq!(components[1].phonetic, Some("/smɪθ/".to_string()));
-        assert_eq!(name.phonetic_system, Some("ipa".to_string()));
+        assert_eq!(name.phonetic_system, Some(PhoneticSystem::Ipa));
     }
 
     #[test]
@@ -114,7 +115,7 @@ mod test {
             .get("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
             .unwrap();
         let relation = f81d4fae.relation.as_ref().unwrap();
-        assert_eq!(relation.get("friend").unwrap(), &true);
+        assert_eq!(relation.get(&RelationshipType::Friend).unwrap(), &true);
         let email = related_to.get("8cacdfb7d1ffdb59@example.com").unwrap();
         let relation = email.relation.as_ref().unwrap();
         assert_eq!(relation.len(), 0);
@@ -270,7 +271,10 @@ mod test {
 
         let card: Card = serde_json::from_slice(json).unwrap();
         let speak_to_as = card.speak_to_as.unwrap();
-        assert_eq!(speak_to_as.grammatical_gender, Some("neuter".to_string()));
+        assert_eq!(
+            speak_to_as.grammatical_gender,
+            Some(GrammaticalGender::Neuter)
+        );
         let pronouns = speak_to_as.pronouns.unwrap();
         assert_eq!(pronouns.len(), 2);
         let k19 = pronouns.get("k19").unwrap();
@@ -312,7 +316,7 @@ mod test {
         assert_eq!(e1.address, "jqpublic@xyz.example.com");
         let contexts = e1.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(contexts.get(&Context::Work), Some(&true));
         let e2 = emails.get("e2").unwrap();
         assert_eq!(e2.address, "jane_doe@example.com");
         assert_eq!(e2.pref, Some(1));
@@ -343,15 +347,15 @@ mod test {
         assert_eq!(tel0.number, "tel:+1-555-555-5555;ext=5555");
         let contexts = tel0.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("private"), Some(&true));
+        assert_eq!(contexts.get(&Context::Private), Some(&true));
         let features = tel0.features.as_ref().unwrap();
         assert_eq!(features.len(), 1);
-        assert_eq!(features.get("voice"), Some(&true));
+        assert_eq!(features.get(&PhoneFeature::Voice), Some(&true));
         let tel3 = phones.get("tel3").unwrap();
         assert_eq!(tel3.number, "tel:+1-201-555-0123");
         let contexts = tel3.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(contexts.get(&Context::Work), Some(&true));
     }
 
     #[test]
@@ -365,19 +369,19 @@ mod test {
         assert_eq!(l1.language, "en");
         let contexts = l1.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(contexts.get(&Context::Work), Some(&true));
         assert_eq!(l1.pref, Some(1));
         let l2 = preferred_languages.get("l2").unwrap();
         assert_eq!(l2.language, "fr");
         let contexts = l2.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(contexts.get(&Context::Work), Some(&true));
         assert_eq!(l2.pref, Some(2));
         let l3 = preferred_languages.get("l3").unwrap();
         assert_eq!(l3.language, "fr");
         let contexts = l3.contexts.as_ref().unwrap();
         assert_eq!(contexts.len(), 1);
-        assert_eq!(contexts.get("private"), Some(&true));
+        assert_eq!(contexts.get(&Context::Private), Some(&true));
     }
 
     #[test]
@@ -637,7 +641,7 @@ mod test {
         let anniversaries = card.anniversaries.unwrap();
         assert_eq!(anniversaries.len(), 2);
         let k8 = anniversaries.get("k8").unwrap();
-        assert_eq!(k8.kind, "birth");
+        assert_eq!(k8.kind, AnniversaryKind::Birth);
         let date_k8 = match &k8.date {
             DateObject::PartialDate(date) => date,
             _ => panic!("Expected PartialDate"),
@@ -646,7 +650,7 @@ mod test {
         assert_eq!(date_k8.month, Some(4));
         assert_eq!(date_k8.day, Some(15));
         let k9 = anniversaries.get("k9").unwrap();
-        assert_eq!(k9.kind, "death");
+        assert_eq!(k9.kind, AnniversaryKind::Death);
         let date_k9 = match &k9.date {
             DateObject::Timestamp(date) => date,
             _ => panic!("Expected Timestamp"),

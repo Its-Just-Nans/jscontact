@@ -1,5 +1,6 @@
 """get figures from RFC 9553"""
 
+from os.path import dirname, realpath
 from pathlib import Path
 from xml.dom import minidom
 import requests
@@ -11,7 +12,7 @@ def main(rfc, output_dir="raws"):
     xml = minidom.parseString(text)
     figures = xml.getElementsByTagName("figure")
     out_dir = Path(output_dir)
-    out_dir.mkdir(exist_ok=True)
+    out_dir.mkdir(exist_ok=True, parents=True)
     number = len(figures)
     for figure in figures:
         name = figure.attributes["pn"].value.split("-")[0]
@@ -26,4 +27,6 @@ def main(rfc, output_dir="raws"):
 
 
 if __name__ == "__main__":
-    main("rfc9553", "rfc9553/raws")
+    dirname_script = dirname(realpath(__file__))
+    out_dir = Path(dirname_script).joinpath("rfc9553/raws")
+    main("rfc9553", out_dir)

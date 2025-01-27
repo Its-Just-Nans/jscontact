@@ -1,5 +1,4 @@
 use std::fs;
-use std::os::linux::raw;
 use std::path::Path;
 
 const JSON_DEFAULT_CARD: &str = r#"

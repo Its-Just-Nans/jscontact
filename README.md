@@ -14,3 +14,12 @@ cargo test -- --test-threads=1
 cargo test --no-default-features -- --test-threads=1
 # the --test-threads=1 is used to have a deterministic (ordered) output
 ```
+
+## License
+
+Licensed under the MIT license [LICENSE](LICENSE) except for the `tests` directory.
+
+The `tests` directory contains the following files:
+
+- the RFC 9553 figures
+- some imported tests files from other repositories

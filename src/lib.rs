@@ -45,6 +45,11 @@ pub struct Card {
     pub phones: Option<HashMap<String, Phone>>,
     /// Preferred languages for communication.
     pub preferred_languages: Option<HashMap<String, LanguagePref>>,
+
+    pub calendars: Option<HashMap<String, Calendar>>,
+
+    pub scheduling_addresses: Option<HashMap<String, SchedulingAddress>>,
+
     /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
     pub localizations: Option<HashMap<String, LocalizationObject>>,
     /// The memorable dates and events for the entity represented by the Card.
@@ -65,6 +70,36 @@ pub struct Card {
     pub notes: Option<HashMap<String, Note>>,
 
     pub personal_info: Option<HashMap<String, PersonalInfo>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Calendar {
+    #[serde(rename = "@type")]
+    calendar_type: Option<String>,
+    pub kind: Option<CalendarKind>,
+    pub uri: String,
+    pub contexts: Option<HashMap<String, bool>>,
+    pub pref: Option<u64>,
+    pub label: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum CalendarKind {
+    Calendar,
+    FreeBusy,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct SchedulingAddress {
+    #[serde(rename = "@type")]
+    scheduling_address_type: Option<String>,
+    pub uri: String,
+    pub contexts: Option<HashMap<String, bool>>,
+    pub pref: Option<u64>,
+    pub label: Option<String>,
 }
 
 /// The kind of the entity the Card represents.

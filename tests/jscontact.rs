@@ -1,8 +1,8 @@
 mod test {
 
     use jscontact::{
-        AddressComponentKind, Card, CardKind, DateObject, DirectoryKind, LinkKind,
-        LocalizationObject, MediaKind, Name, NameComponentKind, PersonalInfoLevel, TitleKind,
+        AddressComponentKind, CalendarKind, Card, CardKind, DateObject, DirectoryKind, LinkKind,
+        LocalizationObject, MediaKind, NameComponentKind, PersonalInfoLevel, TitleKind,
     };
 
     #[test]
@@ -153,7 +153,8 @@ mod test {
     #[test]
     fn test_figure_17() {
         let json = include_bytes!("./rfc9553/figure_17.json");
-        let name: Name = serde_json::from_slice(json).unwrap();
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let name = card.name.unwrap();
         let components = name.components.unwrap();
         assert_eq!(components.len(), 3);
         assert_eq!(components[0].kind, NameComponentKind::Given);
@@ -169,14 +170,16 @@ mod test {
     fn test_figure_18() {
         let json = include_bytes!("./rfc9553/figure_18.json");
 
-        let name: Name = serde_json::from_slice(json).unwrap();
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let name = card.name.unwrap();
         assert_eq!(name.full, Some("Mr. John Q. Public, Esq.".to_string()));
     }
 
     #[test]
     fn test_figure_19() {
         let json = include_bytes!("./rfc9553/figure_19.json");
-        let name: Name = serde_json::from_slice(json).unwrap();
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let name = card.name.unwrap();
         let components = name.components.unwrap();
         assert_eq!(components.len(), 3);
         assert_eq!(components[0].kind, NameComponentKind::Given);
@@ -258,6 +261,159 @@ mod test {
         assert_eq!(units[0].name, "North American Division");
         assert_eq!(units[1].name, "Marketing");
         assert_eq!(o1.sort_as, Some("ABC".to_string()));
+    }
+
+    #[test]
+    fn test_figure_23() {
+        let json = include_bytes!("./rfc9553/figure_23.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let speak_to_as = card.speak_to_as.unwrap();
+        assert_eq!(speak_to_as.grammatical_gender, Some("neuter".to_string()));
+        let pronouns = speak_to_as.pronouns.unwrap();
+        assert_eq!(pronouns.len(), 2);
+        let k19 = pronouns.get("k19").unwrap();
+        assert_eq!(k19.pronouns, "they/them");
+        assert_eq!(k19.pref, Some(2));
+        let k32 = pronouns.get("k32").unwrap();
+        assert_eq!(k32.pronouns, "xe/xir");
+        assert_eq!(k32.pref, Some(1));
+    }
+
+    #[test]
+    fn test_figure_24() {
+        let json = include_bytes!("./rfc9553/figure_24.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let titles = card.titles.unwrap();
+        assert_eq!(titles.len(), 2);
+        let le9 = titles.get("le9").unwrap();
+        assert_eq!(le9.kind, Some(TitleKind::Title));
+        assert_eq!(le9.name, "Research Scientist");
+        let k2 = titles.get("k2").unwrap();
+        assert_eq!(k2.kind, Some(TitleKind::Role));
+        assert_eq!(k2.name, "Project Leader");
+        assert_eq!(k2.organization_id, Some("o2".to_string()));
+        let organizations = card.organizations.unwrap();
+        assert_eq!(organizations.len(), 1);
+        let o2 = organizations.get("o2").unwrap();
+        assert_eq!(o2.name, Some("ABC, Inc.".to_string()));
+    }
+
+    #[test]
+    fn test_figure_25() {
+        let json = include_bytes!("./rfc9553/figure_25.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let emails = card.emails.unwrap();
+        assert_eq!(emails.len(), 2);
+        let e1 = emails.get("e1").unwrap();
+        assert_eq!(e1.address, "jqpublic@xyz.example.com");
+        let contexts = e1.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("work"), Some(&true));
+        let e2 = emails.get("e2").unwrap();
+        assert_eq!(e2.address, "jane_doe@example.com");
+        assert_eq!(e2.pref, Some(1));
+    }
+
+    #[test]
+    fn test_figure_26() {
+        let json = include_bytes!("./rfc9553/figure_26.json");
+        // {
+        //     "onlineServices": {
+        //         "x1": {
+        //             "uri": "xmpp:alice@example.com"
+        //         },
+        //         "x2": {
+        //             "service": "Mastodon",
+        //             "user": "@alice@example2.com",
+        //             "uri": "https://example2.com/@alice"
+        //         }
+        //     }
+        // }
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let online_services = card.online_services.unwrap();
+        assert_eq!(online_services.len(), 2);
+        let x1 = online_services.get("x1").unwrap();
+        assert_eq!(x1.uri, Some("xmpp:alice@example.com".to_string()));
+        let x2 = online_services.get("x2").unwrap();
+        assert_eq!(x2.service, Some("Mastodon".to_string()));
+        assert_eq!(x2.user, Some("@alice@example2.com".to_string()));
+        assert_eq!(x2.uri, Some("https://example2.com/@alice".to_string()));
+    }
+    #[test]
+    fn test_figure_27() {
+        let json = include_bytes!("./rfc9553/figure_27.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let phones = card.phones.unwrap();
+        assert_eq!(phones.len(), 2);
+        let tel0 = phones.get("tel0").unwrap();
+        assert_eq!(tel0.number, "tel:+1-555-555-5555;ext=5555");
+        let contexts = tel0.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("private"), Some(&true));
+        let features = tel0.features.as_ref().unwrap();
+        assert_eq!(features.len(), 1);
+        assert_eq!(features.get("voice"), Some(&true));
+        let tel3 = phones.get("tel3").unwrap();
+        assert_eq!(tel3.number, "tel:+1-201-555-0123");
+        let contexts = tel3.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("work"), Some(&true));
+    }
+
+    #[test]
+    fn test_figure_28() {
+        let json = include_bytes!("./rfc9553/figure_28.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let preferred_languages = card.preferred_languages.unwrap();
+        assert_eq!(preferred_languages.len(), 3);
+        let l1 = preferred_languages.get("l1").unwrap();
+        assert_eq!(l1.language, "en");
+        let contexts = l1.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(l1.pref, Some(1));
+        let l2 = preferred_languages.get("l2").unwrap();
+        assert_eq!(l2.language, "fr");
+        let contexts = l2.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("work"), Some(&true));
+        assert_eq!(l2.pref, Some(2));
+        let l3 = preferred_languages.get("l3").unwrap();
+        assert_eq!(l3.language, "fr");
+        let contexts = l3.contexts.as_ref().unwrap();
+        assert_eq!(contexts.len(), 1);
+        assert_eq!(contexts.get("private"), Some(&true));
+    }
+
+    #[test]
+    fn test_figure_29() {
+        let json = include_bytes!("./rfc9553/figure_29.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let calendars = card.calendars.unwrap();
+        assert_eq!(calendars.len(), 2);
+        let cal_a = calendars.get("calA").unwrap();
+        assert_eq!(cal_a.kind, Some(CalendarKind::Calendar));
+        assert_eq!(cal_a.uri, "webcal://calendar.example.com/calA.ics");
+        let project_a = calendars.get("project-a").unwrap();
+        assert_eq!(project_a.kind, Some(CalendarKind::FreeBusy));
+        assert_eq!(project_a.uri, "https://calendar.example.com/busy/project-a");
+    }
+
+    #[test]
+    fn test_figure_30() {
+        let json = include_bytes!("./rfc9553/figure_30.json");
+
+        let card: Card = serde_json::from_slice(json).unwrap();
+        let scheduling_addresses = card.scheduling_addresses.unwrap();
+        assert_eq!(scheduling_addresses.len(), 1);
+        let sched1 = scheduling_addresses.get("sched1").unwrap();
+        assert_eq!(sched1.uri, "mailto:janedoe@example.com");
     }
 
     #[test]

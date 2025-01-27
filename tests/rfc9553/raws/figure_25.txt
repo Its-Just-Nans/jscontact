@@ -1,0 +1,12 @@
+"emails": {
+    "e1": {
+        "contexts": {
+            "work": true
+        },
+        "address": "jqpublic@xyz.example.com"
+    },
+    "e2": {
+        "address": "jane_doe@example.com",
+        "pref": 1
+    }
+}

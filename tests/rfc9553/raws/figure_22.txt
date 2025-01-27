@@ -1,0 +1,7 @@
+"organizations": {
+    "o1": {
+        "name": "ABC, Inc.",
+        "units": [{ "name": "North American Division" }, { "name": "Marketing" }],
+        "sortAs": "ABC"
+    }
+}

@@ -1,0 +1,7 @@
+"name": {
+    "components": [
+        { "kind": "given", "value": "Vincent" },
+        { "kind": "surname", "value": "van Gogh" }
+    ],
+    "isOrdered": true
+}

@@ -1,0 +1,11 @@
+v-extension = v-prefix ":" v-name
+
+v-prefix = v-label *("." v-label)
+
+v-label = alnum-int / alnum-int *(alnum-int / "-") alnum-int
+
+alnum-int = ALPHA / DIGIT / NON-ASCII
+  ; see RFC 6350, Section 3.3
+
+v-name = 1*(WSP / "!" / %x23-2e / %x30-7d / NON-ASCII)
+  ; any characters except CTLs, DQUOTE, SOLIDUS, and TILDE

@@ -1,0 +1,5 @@
+"schedulingAddresses": {
+    "sched1": {
+        "uri": "mailto:janedoe@example.com"
+    }
+}

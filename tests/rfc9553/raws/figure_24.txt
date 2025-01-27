@@ -1,0 +1,16 @@
+"titles": {
+    "le9": {
+        "kind": "title",
+        "name": "Research Scientist"
+    },
+    "k2": {
+        "kind": "role",
+        "name": "Project Leader",
+        "organizationId": "o2"
+    }
+},
+"organizations": {
+    "o2": {
+        "name": "ABC, Inc."
+    }
+}

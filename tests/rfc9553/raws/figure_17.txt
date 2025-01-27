@@ -1,0 +1,8 @@
+"name": {
+    "components": [
+        { "kind": "given", "value": "Diego" },
+        { "kind": "surname", "value": "Rivera" },
+        { "kind": "surname2", "value": "Barrientos" }
+    ],
+    "isOrdered": true
+}

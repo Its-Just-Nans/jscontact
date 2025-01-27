@@ -1,12 +1,17 @@
 {
-    "components": [
-        { "kind": "given", "value": "Robert" },
-        { "kind": "given2", "value": "Pau" },
-        { "kind": "surname", "value": "Shou Chang" }
-    ],
-    "sortAs": {
-        "surname": "Pau Shou Chang",
-        "given": "Robert"
-    },
-    "isOrdered": true
+    "@type": "Card",
+    "version": "1.0",
+    "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
+    "name": {
+        "components": [
+            { "kind": "given", "value": "Robert" },
+            { "kind": "given2", "value": "Pau" },
+            { "kind": "surname", "value": "Shou Chang" }
+        ],
+        "sortAs": {
+            "surname": "Pau Shou Chang",
+            "given": "Robert"
+        },
+        "isOrdered": true
+    }
 }

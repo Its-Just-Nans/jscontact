@@ -1,0 +1,20 @@
+"addresses": {
+    "k23": {
+        "contexts": {
+            "work": true
+        },
+        "components": [
+            { "kind": "number", "value": "54321" },
+            { "kind": "separator", "value": " " },
+            { "kind": "name", "value": "Oak St" },
+            { "kind": "locality", "value": "Reston" },
+            { "kind": "region", "value": "VA" },
+            { "kind": "separator", "value": " " },
+            { "kind": "postcode", "value": "20190" },
+            { "kind": "country", "value": "USA" }
+        ],
+        "countryCode": "US",
+        "defaultSeparator": ", ",
+        "isOrdered": true
+    }
+}

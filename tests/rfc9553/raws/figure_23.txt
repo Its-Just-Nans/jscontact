@@ -1,0 +1,13 @@
+"speakToAs": {
+    "grammaticalGender": "neuter",
+    "pronouns": {
+        "k19": {
+            "pronouns": "they/them",
+            "pref": 2
+        },
+        "k32": {
+            "pronouns": "xe/xir",
+            "pref": 1
+        }
+    }
+}

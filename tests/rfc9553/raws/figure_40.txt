@@ -1,0 +1,14 @@
+"name": {
+    "full": "Gabriel García Márquez"
+},
+"titles": {
+    "t1": {
+        "kind": "title",
+        "name": "novelist"
+    }
+},
+"localizations": {
+    "es": {
+        "titles/t1/name": "escritor"
+    }
+}

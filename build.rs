@@ -6,12 +6,17 @@ const JSON_DEFAULT_CARD: &str = r#"
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065","#;
 
-const SHOULD_ADD: [&str; 34] = [
+const SHOULD_ADD: [&str; 39] = [
     "figure_01.txt",
+    "figure_07.txt",
     "figure_08.txt",
     "figure_09.txt",
     "figure_10.txt",
+    "figure_11.txt",
     "figure_12.txt",
+    "figure_13.txt",
+    "figure_14.txt",
+    "figure_15.txt",
     "figure_16.txt",
     "figure_17.txt",
     "figure_18.txt",
@@ -53,25 +58,44 @@ fn main() {
         let mut contents = fs::read_to_string(&path).unwrap();
         let file_name = path.file_name().unwrap();
         let mut file_name = file_name.to_str().unwrap().to_string();
-        if file_name == "figure_18.txt" {
-            contents = format!(
-                r#""name": {{
+        let mut json_default = JSON_DEFAULT_CARD.to_string();
+        match file_name.as_str() {
+            "figure_07.txt" => {
+                json_default = json_default.replace(
+                    r#"
+    "version": "1.0","#,
+                    "",
+                );
+            }
+            "figure_18.txt" => {
+                contents = format!(
+                    r#""name": {{
     {}
 }}"#,
-                contents
-            );
-        } else if file_name == "figure_39.txt" {
-            let mut chars = contents.chars();
-            chars.next();
-            chars.next();
-            chars.next_back();
-            contents = chars.collect();
-            // remove first 4 spaces
-            contents = contents
-                .lines()
-                .map(|line| line.chars().skip(4).collect())
-                .collect::<Vec<String>>()
-                .join("\n");
+                    contents
+                );
+            }
+            "figure_39.txt" => {
+                let mut chars = contents.chars();
+                chars.next();
+                chars.next();
+                chars.next_back();
+                contents = chars.collect();
+                // remove first 4 spaces
+                contents = contents
+                    .lines()
+                    .map(|line| line.chars().skip(4).collect())
+                    .collect::<Vec<String>>()
+                    .join("\n");
+            }
+            "figure_14.txt" | "figure_11.txt" => {
+                json_default = json_default.replace(
+                    r#"
+    "uid": "22B2C7DF-9120-4969-8460-05956FE6B065","#,
+                    "",
+                );
+            }
+            _ => {}
         }
         if SHOULD_ADD.contains(&file_name.as_str()) {
             let tabbed = contents
@@ -79,7 +103,7 @@ fn main() {
                 .map(|line| format!("    {}", line))
                 .collect::<Vec<String>>()
                 .join("\n");
-            contents = format!("{{{}\n{}\n}}", JSON_DEFAULT_CARD, tabbed);
+            contents = format!("{{{}\n{}\n}}", json_default, tabbed);
             file_name.replace_range(file_name.len() - 4.., ".json");
         }
         let out_path = dest_path.join(file_name);

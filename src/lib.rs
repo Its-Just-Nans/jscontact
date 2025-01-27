@@ -450,22 +450,22 @@ pub enum LinkType {
 
 #[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
-pub struct Ressource {
+pub struct Resource {
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
 }
 
-impl From<Ressource> for Link {
-    fn from(ressource: Ressource) -> Self {
+impl From<Resource> for Link {
+    fn from(resource: Resource) -> Self {
         Self {
             #[cfg(feature = "typed")]
             link_type: Some(LinkType::Link),
             kind: None,
             uri: "".to_string(),
-            contexts: ressource.contexts,
-            pref: ressource.pref,
-            label: ressource.label,
+            contexts: resource.contexts,
+            pref: resource.pref,
+            label: resource.label,
         }
     }
 }
@@ -477,7 +477,7 @@ impl Link {
             link_type: Some(LinkType::Link),
             kind: None,
             uri: uri.to_string(),
-            ..Ressource::default().into()
+            ..Resource::default().into()
         }
     }
 }
@@ -965,7 +965,6 @@ pub struct Timestamp {
 
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(untagged)]
 pub enum TimestampType {
     Timestamp,
 }
@@ -1001,7 +1000,6 @@ pub struct PartialDate {
 
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(untagged)]
 pub enum PartialDateType {
     PartialDate,
 }

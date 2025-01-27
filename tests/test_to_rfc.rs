@@ -17,7 +17,8 @@ mod test {
     fn test_figure_01() {
         let verifier = include_bytes!("./rfc9553/figure_01.json");
         let verifier: Card = serde_json::from_slice(verifier).unwrap();
-        let verifier_str = serde_json::to_string_pretty(&verifier).unwrap();
+        let verifier = serde_json::to_value(verifier).unwrap();
+
         let mut card = Card::new(
             CardVersion::OneDotZero,
             "22B2C7DF-9120-4969-8460-05956FE6B065",
@@ -30,15 +31,15 @@ mod test {
         name.components = Some(vec![name_component_1, name_component_2]);
         name.phonetic_system = Some("ipa".to_string());
         card.name = Some(name);
-        let card_str = serde_json::to_string_pretty(&card).unwrap();
-        assert_eq!(card_str, verifier_str);
+        let card_value = serde_json::to_value(card).unwrap();
+        assert_eq!(verifier, card_value);
     }
 
     #[test]
     fn test_figure_44() {
         let verifier = include_bytes!("./rfc9553/figure_44.json");
         let verifier: Card = serde_json::from_slice(verifier).unwrap();
-        let verifier_str = serde_json::to_string_pretty(&verifier).unwrap();
+        let verifier = serde_json::to_value(verifier).unwrap();
 
         let mut card = Card::new(
             CardVersion::OneDotZero,
@@ -47,15 +48,15 @@ mod test {
         let mut personal_infos = HashMap::new();
         let mut personal_info = PersonalInfo::new(PersonalInfoKind::Expertise, "chemistry");
         personal_info.level = Some(PersonalInfoLevel::High);
-        personal_infos.insert("pi2".to_string(), personal_info);
+        personal_infos.insert("pi2".to_string(), personal_info.into());
         let mut personal_info = PersonalInfo::new(PersonalInfoKind::Hobby, "reading");
         personal_info.level = Some(PersonalInfoLevel::High);
-        personal_infos.insert("pi1".to_string(), personal_info);
+        personal_infos.insert("pi1".to_string(), personal_info.into());
         let mut personal_info = PersonalInfo::new(PersonalInfoKind::Interest, "r&b music");
         personal_info.level = Some(PersonalInfoLevel::Medium);
-        personal_infos.insert("pi6".to_string(), personal_info);
+        personal_infos.insert("pi6".to_string(), personal_info.into());
         card.personal_info = Some(personal_infos);
-        let card_str = serde_json::to_string_pretty(&card).unwrap();
-        assert_eq!(card_str, verifier_str);
+        let card_value = serde_json::to_value(card).unwrap();
+        assert_eq!(verifier, card_value);
     }
 }

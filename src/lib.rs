@@ -358,65 +358,51 @@ pub enum DirectoryKind {
 pub enum LocalizationObject {
     /// Priority
     /// The key is the path of the property to localize, and the value is the localized value.
-    PatchObject(HashMap<String, String>),
-    PatchObjectAddress(HashMap<String, Address>),
-    Name {
-        name: Name,
+    PatchObject(HashMap<String, PatchingObject>),
+    Replacement {
+        name: Box<Option<Name>>,
+        nicknames: Box<Option<Nickname>>,
+        organizations: Box<Option<Organization>>,
+        speak_to_as: Box<Option<SpeakToAs>>,
+        titles: Box<Option<Title>>,
+        emails: Box<Option<EmailAddress>>,
+        online_services: Box<Option<OnlineService>>,
+        phones: Box<Option<Phone>>,
+        preferred_languages: Box<Option<LanguagePref>>,
+        calendars: Box<Option<Calendar>>,
+        scheduling_addresses: Box<Option<SchedulingAddress>>,
+        anniversaries: Box<Option<Anniversary>>,
+        addresses: Box<Option<Address>>,
+        crypto_keys: Box<Option<CryptoKey>>,
+        directories: Box<Option<Directory>>,
+        links: Box<Option<Link>>,
+        media: Box<Option<Media>>,
+        notes: Box<Option<Note>>,
+        personal_info: Box<Option<PersonalInfo>>,
     },
-    Nickname {
-        nicknames: Nickname,
-    },
-    Organization {
-        organizations: Organization,
-    },
-    SpeakToAs {
-        speak_to_as: SpeakToAs,
-    },
-    Title {
-        titles: Title,
-    },
-    EmailAddress {
-        emails: EmailAddress,
-    },
-    OnlineService {
-        online_services: OnlineService,
-    },
-    Phone {
-        phones: Phone,
-    },
-    LanguagePref {
-        preferred_languages: LanguagePref,
-    },
-    Calendar {
-        calendars: Calendar,
-    },
-    SchedulingAddress {
-        scheduling_addresses: SchedulingAddress,
-    },
-    Anniversary {
-        anniversaries: Anniversary,
-    },
-    Address {
-        addresses: Address,
-    },
-    CryptoKey {
-        crypto_keys: CryptoKey,
-    },
-    Directory {
-        directories: Directory,
-    },
-    Link {
-        links: Link,
-    },
-    Media {
-        media: Media,
-    },
-    Note {
-        notes: Note,
-    },
-    PersonalInfo {
-        personal_info: PersonalInfo,
-    },
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(untagged)]
+pub enum PatchingObject {
+    String(String),
+    Nickname(Nickname),
+    // Organization(Organization),
+    // Title(Title),
+    // EmailAddress(EmailAddress),
+    // OnlineService(OnlineService),
+    // Phone(Phone),
+    // LanguagePref(LanguagePref),
+    // Calendar(Calendar),
+    // SchedulingAddress(SchedulingAddress),
+    // Anniversary(Anniversary),
+    Address(Address),
+    // CryptoKey(CryptoKey),
+    // Directory(Directory),
+    // Link(Link),
+    // Media(Media),
+    // Note(Note),
+    // PersonalInfo(PersonalInfo),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -684,7 +670,7 @@ pub enum NameComponentKind {
 }
 
 /// Defines the Nickname object, which includes nicknames for the entity.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Nickname {
     /// The JSContact type of the object. Must be "Nickname".
@@ -700,7 +686,7 @@ pub struct Nickname {
 }
 
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum NicknameType {
     Nickname,
 }
@@ -1157,7 +1143,7 @@ pub enum PartialDateType {
     PartialDate,
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Address {
     /// The JSContact type of the object. The value MUST be "Address", if set.
@@ -1194,13 +1180,13 @@ pub enum AddressContext {
 
 /// Address @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum AddressType {
     /// Address @type
     Address,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AddressComponent {
     /// The JSContact type of the object. The value MUST be "AddressComponent", if set.
@@ -1214,7 +1200,7 @@ pub struct AddressComponent {
 
 /// AddressComponent @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum AddressComponentType {
     /// AddressComponent @type
     AddressComponent,

@@ -60,30 +60,39 @@ fn main() {
         let mut file_name = file_name.to_str().unwrap().to_string();
         let mut json_default = JSON_DEFAULT_CARD.to_string();
         match file_name.as_str() {
+            // figure_06.txt is already a json file
             "figure_06.txt" => {
                 file_name.replace_range(file_name.len() - 4.., ".json");
             }
+            // figure_07.txt has already the `version` field
             "figure_07.txt" => {
                 json_default = json_default.replace("\n    \"version\": \"1.0\",", "");
             }
-            "figure_18.txt" => {
-                contents = format!(
-                    r#""name": {{
-    {}
-}}"#,
-                    contents
+            // figure_11.txt and figure_14.txt have already the `uid` field
+            "figure_11.txt" | "figure_14.txt" => {
+                json_default = json_default.replace(
+                    "\n    \"uid\": \"22B2C7DF-9120-4969-8460-05956FE6B065\",",
+                    "",
                 );
             }
+            // https://www.rfc-editor.org/errata/eid8265
+            "figure_18.txt" => {
+                contents = format!("\"name\": {{\n    {}\n}}", contents);
+            }
+            // https://www.rfc-editor.org/errata/eid8263
             "figure_20.txt" => {
                 contents = contents.replace("{\n  \"@type\": \"Card\",\n", "");
                 contents = contents[..contents.len() - 2].to_string();
             }
+            // the rfc impose a max line length so a value is split in multiple lines
             "figure_35.txt" => {
                 contents = contents.replace("\n            ", "");
             }
+            // https://www.rfc-editor.org/errata/eid8266
             "figure_36.txt" => {
                 contents = format!("{}\n}}", contents);
             }
+            // https://www.rfc-editor.org/errata/eid8264
             "figure_39.txt" => {
                 let mut chars = contents.chars();
                 chars.next();
@@ -96,12 +105,6 @@ fn main() {
                     .map(|line| line.chars().skip(2).collect())
                     .collect::<Vec<String>>()
                     .join("\n");
-            }
-            "figure_14.txt" | "figure_11.txt" => {
-                json_default = json_default.replace(
-                    "\n    \"uid\": \"22B2C7DF-9120-4969-8460-05956FE6B065\",",
-                    "",
-                );
             }
             _ => {}
         }

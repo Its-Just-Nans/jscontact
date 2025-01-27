@@ -49,6 +49,11 @@ const SHOULD_ADD: [&str; 39] = [
 ];
 
 fn main() {
+    // On docs.rs, files are read-only and we can't write to them.
+    // So we skip this step when building the docs.
+    if std::env::var("DOCS_RS").is_ok() {
+        return;
+    }
     let raws = fs::read_dir("./tests/rfc9553/raws").unwrap();
 
     let dest_path = Path::new("./tests/rfc9553/");

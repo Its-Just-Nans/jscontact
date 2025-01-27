@@ -1,2 +1,9 @@
 [default.extend-words]
 ND = "ND"
+
+[files]
+extend-exclude = [
+    "tests/rfc9553/raws/*.txt",
+    "tests/rfc9553/*.txt",
+    "get_figures.py",
+]

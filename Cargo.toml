@@ -1,12 +1,15 @@
 [package]
 name = "jscontact"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "RFC 9553"
 license = "MIT"
-repository = "https://github.com/Its-Just-Nans/apksig"
+readme = "README.md"
+repository = "https://github.com/Its-Just-Nans/jscontact"
+issues = "https://github.com/Its-Just-Nans/jscontact/issues"
 keywords = ["jscontact", "vcard", "card", "rfc9553"]
 categories = ["encoding", "serialization", "vcard", "rfc9553"]
+documentation = "https://docs.rs/jscontact"
 
 [features]
 default = ["typed"]

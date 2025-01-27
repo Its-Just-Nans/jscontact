@@ -1,4 +1,4 @@
-# jscontact
+# jscontact [![crates.io version](https://img.shields.io/crates/v/jscontact)](https://crates.io/crates/jscontact) ![crates.io downloads](https://img.shields.io/crates/d/jscontact)
 
 - <https://docs.rs/jscontact> - documentation
 - <https://github.com/Its-Just-Nans/jscontact> - repository

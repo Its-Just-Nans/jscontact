@@ -1,6 +1,6 @@
 # Imported tests
 
-These tests are imported from other repositories. The lisence of these tests are those of the original repositories.
+These tests are imported from other repositories. The licence of these tests are those of the original repositories.
 
 ## List of imported tests
 

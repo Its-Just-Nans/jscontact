@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/Its-Just-Nans/jscontact"
 issues = "https://github.com/Its-Just-Nans/jscontact/issues"
 keywords = ["jscontact", "vcard", "card", "rfc9553"]
-categories = ["encoding", "serialization", "vcard", "rfc9553"]
+categories = ["encoding", "data-structures", "internationalization", "parsing"]
 documentation = "https://docs.rs/jscontact"
 
 [features]

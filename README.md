@@ -11,5 +11,6 @@ rm -rf tests/rfc9553
 python tests/get_figures.py
 cargo build
 cargo test -- --test-threads=1
+cargo test --no-default-features -- --test-threads=1
 # the --test-threads=1 is used to have a deterministic (ordered) output
 ```

@@ -20,3 +20,5 @@ jobs:
               run: python tests/get_figures.py
             - name: Run tests
               run: cargo test --verbose  -- --test-threads=1
+            - name: Run tests untyped
+              run: cargo test --verbose --no-default-features -- --test-threads=1

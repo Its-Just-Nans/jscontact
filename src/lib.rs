@@ -1,3 +1,44 @@
+//! # JSContact
+//! This crates implements types for the JSContact format as defined in RFC 9553.
+//!
+//! To start using this crate, run the following command in your project directory:
+//! ```bash
+//! cargo add jscontact
+//! ```
+//!
+//! Simple deserialization example:
+//! ```rust
+//! use jscontact::Card;
+//! use serde_json;
+//!
+//! let json = serde_json::json!({
+//!     "@type": "Card",
+//!     "version": "1.0",
+//!     "uid": "1234"
+//! });
+//! let card: Card = serde_json::from_value(json).unwrap();
+//! ```
+//!
+//! Simple creation example:
+//! ```rust
+//! use jscontact::{Card, CardKind, Name, NameComponent, NameComponentKind};
+//! use serde_json;
+//!
+//! let mut card = Card::new_with_latest_version("1234");
+//! card.kind = Some(CardKind::Individual);
+//! let json = serde_json::to_string(&card).unwrap();
+//! ```
+
+#![deny(
+    // missing_docs,
+    // clippy::all,
+    clippy::missing_docs_in_private_items,
+    clippy::missing_errors_doc,
+    clippy::missing_panics_doc,
+    clippy::cargo
+)]
+#![warn(clippy::multiple_crate_versions)]
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -6,10 +47,11 @@ use std::collections::HashMap;
 #[serde(rename_all = "camelCase")]
 pub struct Card {
     /// The JSContact type of the Card object. Must be "Card".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
     card_type: String,
     /// The JSContact version of this Card.
-    pub version: String,
+    pub version: CardVersion,
 
     pub created: Option<String>,
 
@@ -72,16 +114,92 @@ pub struct Card {
     pub personal_info: Option<HashMap<String, PersonalInfo>>,
 }
 
+impl Card {
+    pub fn new(version: CardVersion, uid: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            card_type: "Card".to_string(),
+            version,
+            uid: uid.to_string(),
+            created: None,
+            kind: None,
+            language: None,
+            members: None,
+            prod_id: None,
+            related_to: None,
+            updated: None,
+            name: None,
+            nicknames: None,
+            organizations: None,
+            speak_to_as: None,
+            titles: None,
+            emails: None,
+            online_services: None,
+            phones: None,
+            preferred_languages: None,
+            calendars: None,
+            scheduling_addresses: None,
+            localizations: None,
+            anniversaries: None,
+            addresses: None,
+            crypto_keys: None,
+            directories: None,
+            links: None,
+            media: None,
+            keywords: None,
+            notes: None,
+            personal_info: None,
+        }
+    }
+
+    pub fn new_with_latest_version(uid: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            card_type: "Card".to_string(),
+            uid: uid.to_string(),
+            ..Card::new(CardVersion::OneDotZero, uid)
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+pub enum CardVersion {
+    #[serde(rename = "1.0")]
+    OneDotZero,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Calendar {
+    /// The @type property value MUST be "Calendar", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    calendar_type: Option<String>,
+    calendar_type: Option<CalendarType>,
     pub kind: Option<CalendarKind>,
     pub uri: String,
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum CalendarType {
+    Calendar,
+}
+
+impl Calendar {
+    pub fn new(uri: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            calendar_type: Some(CalendarType::Calendar),
+            uri: uri.to_string(),
+            kind: None,
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -94,12 +212,33 @@ pub enum CalendarKind {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct SchedulingAddress {
+    /// The JSContact type of the object. The value MUST be "SchedulingAddress", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    scheduling_address_type: Option<String>,
+    scheduling_address_type: Option<SchedulingAddressType>,
     pub uri: String,
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum SchedulingAddressType {
+    SchedulingAddress,
+}
+
+impl SchedulingAddress {
+    pub fn new(uri: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            scheduling_address_type: Some(SchedulingAddressType::SchedulingAddress),
+            uri: uri.to_string(),
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
 }
 
 /// The kind of the entity the Card represents.
@@ -123,8 +262,10 @@ pub enum CardKind {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CryptoKey {
+    /// The @type property value MUST be "CryptoKey", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    crypto_key_type: Option<String>,
+    crypto_key_type: Option<CryptoKeyType>,
     pub uri: String,
     pub kind: Option<String>,
     pub contexts: Option<HashMap<String, bool>>,
@@ -132,17 +273,60 @@ pub struct CryptoKey {
     pub label: Option<String>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum CryptoKeyType {
+    CryptoKey,
+}
+
+impl CryptoKey {
+    pub fn new(uri: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            crypto_key_type: Some(CryptoKeyType::CryptoKey),
+            uri: uri.to_string(),
+            kind: None,
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Directory {
+    /// The @type property value MUST be "Directory", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    directory_type: Option<String>,
+    directory_type: Option<DirectoryType>,
     pub kind: Option<DirectoryKind>,
     pub uri: String,
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
     pub list_as: Option<u64>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum DirectoryType {
+    Directory,
+}
+
+impl Directory {
+    pub fn new(uri: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            directory_type: Some(DirectoryType::Directory),
+            kind: None,
+            uri: uri.to_string(),
+            contexts: None,
+            pref: None,
+            label: None,
+            list_as: None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -203,14 +387,37 @@ pub enum LocalizationObject {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
+    /// The @type property value MUST be "Media", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    media_hidden_type: Option<String>,
+    media_hidden_type: Option<MediaType>,
     pub kind: MediaKind,
     pub uri: String,
     pub media_type: Option<String>,
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum MediaType {
+    Media,
+}
+
+impl Media {
+    pub fn new(uri: &str, kind: MediaKind) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            media_hidden_type: Some(MediaType::Media),
+            kind,
+            uri: uri.to_string(),
+            media_type: None,
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -224,13 +431,55 @@ pub enum MediaKind {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Link {
+    /// The @type property value MUST be "Link", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    link_type: Option<String>,
+    link_type: Option<LinkType>,
     pub kind: Option<LinkKind>,
     pub uri: String,
     pub contexts: Option<HashMap<String, bool>>,
     pub pref: Option<u64>,
     pub label: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum LinkType {
+    Link,
+}
+
+#[derive(Serialize, Deserialize, Debug, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct Ressource {
+    pub contexts: Option<HashMap<String, bool>>,
+    pub pref: Option<u64>,
+    pub label: Option<String>,
+}
+
+impl From<Ressource> for Link {
+    fn from(ressource: Ressource) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            link_type: Some(LinkType::Link),
+            kind: None,
+            uri: "".to_string(),
+            contexts: ressource.contexts,
+            pref: ressource.pref,
+            label: ressource.label,
+        }
+    }
+}
+
+impl Link {
+    pub fn new(uri: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            link_type: Some(LinkType::Link),
+            kind: None,
+            uri: uri.to_string(),
+            ..Ressource::default().into()
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -244,6 +493,7 @@ pub enum LinkKind {
 #[serde(rename_all = "camelCase")]
 pub struct Relation {
     /// The JSContact type of the object. Must be "Relation".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
     relation_type: Option<String>,
     /// The relationship types to related Cards.
@@ -254,6 +504,10 @@ pub struct Relation {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Name {
+    /// The JSContact type of the object. The value MUST be "Name", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    name_type: Option<NameType>,
     /// Components making up the name (e.g., given name, surname).
     pub components: Option<Vec<NameComponent>>,
     /// Whether the name components are ordered.
@@ -270,19 +524,61 @@ pub struct Name {
     pub phonetic_system: Option<String>,
 }
 
+impl Default for Name {
+    fn default() -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            name_type: Some(NameType::Name),
+            components: None,
+            is_ordered: None,
+            default_separator: None,
+            full: None,
+            sort_as: None,
+            phonetic_script: None,
+            phonetic_system: None,
+        }
+    }
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub enum NameType {
+    #[default]
+    Name,
+}
+
 /// Represents individual components of a name, such as given name or surname.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NameComponent {
     /// The JSContact type of the object. Must be "NameComponent".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    name_component_type: Option<String>,
+    name_component_type: Option<NameComponentType>,
     /// The value of the name component (e.g., "John").
     pub value: String,
     /// The kind of the name component (e.g., given, surname).
     pub kind: NameComponentKind,
     /// The phonetic representation of the name component.
     pub phonetic: Option<String>,
+}
+
+impl NameComponent {
+    pub fn new(kind: NameComponentKind, value: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            name_component_type: Some(NameComponentType::NameComponent),
+            value: value.to_string(),
+            kind,
+            phonetic: None,
+        }
+    }
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum NameComponentType {
+    NameComponent,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -303,8 +599,9 @@ pub enum NameComponentKind {
 #[serde(rename_all = "camelCase")]
 pub struct Nickname {
     /// The JSContact type of the object. Must be "Nickname".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    nickname_type: Option<String>,
+    nickname_type: Option<NicknameType>,
     /// The nickname value.
     pub name: String,
     /// Contexts in which to use the nickname.
@@ -313,13 +610,20 @@ pub struct Nickname {
     pub pref: Option<u32>,
 }
 
-/// Represents an Organization object containing company or organization information.
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
+pub enum NicknameType {
+    Nickname,
+}
+
+/// Represents an Organization object containing company or organization information.
+#[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Organization {
     /// The JSContact type of the object. Must be "Organization".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    org_type: Option<String>,
+    org_type: Option<OrganizationType>,
     /// The name of the organization.
     pub name: Option<String>,
     /// Organizational units within the organization.
@@ -330,30 +634,61 @@ pub struct Organization {
     pub contexts: Option<HashMap<String, bool>>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum OrganizationType {
+    Organization,
+}
+
 /// Represents a unit within an organization, such as a department.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct OrgUnit {
     /// The JSContact type of the object. Must be "OrgUnit".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    unit_type: Option<String>,
+    unit_type: Option<OrgUnitType>,
     /// The name of the organizational unit.
     pub name: String,
     /// Custom sorting order for the organizational unit.
     pub sort_as: Option<String>,
 }
 
-/// Represents how to address or refer to the entity, including grammatical gender and pronouns.
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
+pub enum OrgUnitType {
+    OrgUnit,
+}
+
+impl OrgUnit {
+    pub fn new(name: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            unit_type: Some(OrgUnitType::OrgUnit),
+            name: name.to_string(),
+            sort_as: None,
+        }
+    }
+}
+
+/// Represents how to address or refer to the entity, including grammatical gender and pronouns.
+#[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct SpeakToAs {
     /// The JSContact type of the object. Must be "SpeakToAs".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    speak_to_as_type: Option<String>,
+    speak_to_as_type: Option<SpeakToAsType>,
     /// Grammatical gender to use in salutations.
     pub grammatical_gender: Option<String>,
     /// Pronouns associated with the entity.
     pub pronouns: Option<HashMap<String, Pronouns>>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum SpeakToAsType {
+    SpeakToAs,
 }
 
 /// Defines pronouns used for the entity, such as they/them.
@@ -361,8 +696,9 @@ pub struct SpeakToAs {
 #[serde(rename_all = "camelCase")]
 pub struct Pronouns {
     /// The JSContact type of the object. Must be "Pronouns".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    pronoun_type: Option<String>,
+    pronoun_type: Option<PronounsType>,
     /// The pronouns value (e.g., "they/them").
     pub pronouns: String,
     /// Contexts in which to use the pronouns.
@@ -371,19 +707,56 @@ pub struct Pronouns {
     pub pref: Option<u32>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum PronounsType {
+    Pronouns,
+}
+
+impl Pronouns {
+    pub fn new(pronouns: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            pronoun_type: Some(PronounsType::Pronouns),
+            pronouns: pronouns.to_string(),
+            contexts: None,
+            pref: None,
+        }
+    }
+}
+
 /// Represents titles or roles of the entity, such as job titles or functional positions.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Title {
     /// The JSContact type of the object. Must be "Title".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    title_type: Option<String>,
+    title_type: Option<TitleType>,
     /// The title or role name.
     pub name: String,
     /// The kind of title (e.g., title, role).
     pub kind: Option<TitleKind>,
     /// Identifier of the organization associated with this title.
     pub organization_id: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum TitleType {
+    Title,
+}
+
+impl Title {
+    pub fn new(name: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            title_type: Some(TitleType::Title),
+            name: name.to_string(),
+            kind: None,
+            organization_id: None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -398,8 +771,9 @@ pub enum TitleKind {
 #[serde(rename_all = "camelCase")]
 pub struct EmailAddress {
     /// The JSContact type of the object. Must be "EmailAddress".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    email_type: Option<String>,
+    email_type: Option<EmailAddressType>,
     /// The email address.
     pub address: String,
     /// Contexts in which to use the email address.
@@ -410,13 +784,33 @@ pub struct EmailAddress {
     pub label: Option<String>,
 }
 
-/// Represents online services such as social media or messaging accounts.
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
+pub enum EmailAddressType {
+    EmailAddress,
+}
+
+impl EmailAddress {
+    pub fn new(address: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            email_type: Some(EmailAddressType::EmailAddress),
+            address: address.to_string(),
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
+}
+
+/// Represents online services such as social media or messaging accounts.
+#[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct OnlineService {
     /// The JSContact type of the object. Must be "OnlineService".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    service_type: Option<String>,
+    service_type: Option<OnlineServiceType>,
     /// The name of the online service or protocol.
     pub service: Option<String>,
     /// The URI identifying the entity on the service.
@@ -431,13 +825,20 @@ pub struct OnlineService {
     pub label: Option<String>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum OnlineServiceType {
+    OnlineService,
+}
+
 /// Defines phone numbers for the entity, including features like voice or text.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Phone {
     /// The JSContact type of the object. Must be "Phone".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    phone_type: Option<String>,
+    phone_type: Option<PhoneType>,
     /// The phone number, either as a URI or free text.
     pub number: String,
     /// Contact features the phone number supports (e.g., voice, text).
@@ -450,13 +851,34 @@ pub struct Phone {
     pub label: Option<String>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum PhoneType {
+    Phone,
+}
+
+impl Phone {
+    pub fn new(number: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            phone_type: Some(PhoneType::Phone),
+            number: number.to_string(),
+            features: None,
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
+}
+
 /// Represents preferred languages for communication.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LanguagePref {
     /// The JSContact type of the object. Must be "LanguagePref".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    lang_pref_type: Option<String>,
+    lang_pref_type: Option<LanguagePrefType>,
     /// The preferred language as a language tag (e.g., en, fr).
     pub language: String,
     /// Contexts in which to use the preferred language.
@@ -465,13 +887,32 @@ pub struct LanguagePref {
     pub pref: Option<u32>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum LanguagePrefType {
+    LanguagePref,
+}
+
+impl LanguagePref {
+    pub fn new(language: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            lang_pref_type: Some(LanguagePrefType::LanguagePref),
+            language: language.to_string(),
+            contexts: None,
+            pref: None,
+        }
+    }
+}
+
 /// Represents memorable dates and events for the entity.
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Anniversary {
     /// The JSContact type of the object. Must be "Anniversary".
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    anniversary_type: Option<String>,
+    anniversary_type: Option<AnniversaryType>,
     /// The date of the anniversary.
     pub date: DateObject,
     /// The type of anniversary (e.g., birthday, work anniversary).
@@ -482,9 +923,29 @@ pub struct Anniversary {
     pub place: Option<Address>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum AnniversaryType {
+    Anniversary,
+}
+
+impl Anniversary {
+    pub fn new(date: DateObject, kind: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            anniversary_type: Some(AnniversaryType::Anniversary),
+            date,
+            kind: kind.to_string(),
+            contexts: None,
+            place: None,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum DateObject {
+    // Check first if the date is a timestamp because timestamp has a field
     Timestamp(Timestamp),
     PartialDate(PartialDate),
 }
@@ -494,16 +955,40 @@ pub enum DateObject {
 #[serde(rename_all = "camelCase")]
 pub struct Timestamp {
     /// The JSContact type of the object. The value MUST be "Timestamp", if set.
-    timestamp_type: Option<String>,
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    timestamp_type: Option<TimestampType>,
 
     /// The point in time in UTC time
     pub utc: String,
 }
 
-/// A PartialDate object represents a complete or partial calendar date in the Gregorian calendar.  It represents a complete date, a year, a month in a year, or a day in a month.
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+pub enum TimestampType {
+    Timestamp,
+}
+
+impl Timestamp {
+    pub fn new(utc: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            timestamp_type: Some(TimestampType::Timestamp),
+            utc: utc.to_string(),
+        }
+    }
+}
+
+/// A PartialDate object represents a complete or partial calendar date in the Gregorian calendar.  It represents a complete date, a year, a month in a year, or a day in a month.
+#[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct PartialDate {
+    /// The JSContact type of the object. The value MUST be "PartialDate", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    partial_date_type: Option<PartialDateType>,
+
     pub year: Option<u64>,
     pub month: Option<u32>,
     pub day: Option<u32>,
@@ -514,10 +999,20 @@ pub struct PartialDate {
     pub calendar_scale: Option<String>,
 }
 
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+pub enum PartialDateType {
+    PartialDate,
+}
+
+#[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Address {
-    address_type: Option<String>,
+    /// The JSContact type of the object. The value MUST be "Address", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    address_type: Option<AddressType>,
     pub street: Option<String>,
     pub components: Option<Vec<AddressComponent>>,
     pub is_ordered: Option<bool>,
@@ -532,13 +1027,40 @@ pub struct Address {
     pub phonetic_system: Option<String>,
 }
 
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum AddressType {
+    Address,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct AddressComponent {
-    component_type: Option<String>,
+    /// The JSContact type of the object. The value MUST be "AddressComponent", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    component_type: Option<AddressComponentType>,
     pub value: String,
     pub kind: AddressComponentKind,
     pub phonetic: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum AddressComponentType {
+    AddressComponent,
+}
+
+impl AddressComponent {
+    pub fn new(kind: AddressComponentKind, value: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            component_type: Some(AddressComponentType::AddressComponent),
+            value: value.to_string(),
+            kind,
+            phonetic: None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -567,27 +1089,47 @@ pub enum AddressComponentKind {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Note {
-    note_type: Option<String>,
+    /// The JSContact type of the object. The value MUST be "Note", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    note_type: Option<NoteType>,
     pub note: String,
     pub created: Option<String>,
     pub author: Option<Author>,
 }
 
+#[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Author {
-    author_type: Option<String>,
-    pub name: Option<String>,
-    pub uri: Option<String>,
+pub enum NoteType {
+    Note,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct Author {
+    /// The JSContact type of the object. The value MUST be "Author", if set.
+    #[cfg(feature = "typed")]
+    #[serde(rename = "@type")]
+    author_type: Option<AuthorType>,
+    pub name: Option<String>,
+    pub uri: Option<String>,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum AuthorType {
+    Author,
+}
+
+/// The personal information of the entity represented by the Card.
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct PersonalInfo {
     ///The JSContact type of the object.  The value MUST be "PersonalInfo", if set.
+    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    personal_info_type: Option<String>,
-    pub kind: String,
+    personal_info_type: Option<PersonalInfoType>,
+    pub kind: PersonalInfoKind,
     pub value: String,
     pub level: Option<PersonalInfoLevel>,
     pub list_as: Option<u64>,
@@ -596,8 +1138,40 @@ pub struct PersonalInfo {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub enum PersonalInfoKind {
+    Expertise,
+    Hobby,
+    Interest,
+}
+
+#[cfg(feature = "typed")]
+#[derive(Serialize, Deserialize, Debug)]
+pub enum PersonalInfoType {
+    PersonalInfo,
+}
+
+impl PersonalInfo {
+    pub fn new(kind: PersonalInfoKind, value: &str) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            personal_info_type: Some(PersonalInfoType::PersonalInfo),
+            kind,
+            value: value.to_string(),
+            level: None,
+            list_as: None,
+            label: None,
+        }
+    }
+}
+
+/// The level of expertise or engagement in hobby or interest.
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub enum PersonalInfoLevel {
+    /// High level of expertise or engagement.
     High,
+    /// Medium level of expertise or engagement.
     Medium,
+    /// Low level of expertise or engagement.
     Low,
 }

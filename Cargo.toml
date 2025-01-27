@@ -1,9 +1,17 @@
 [package]
 name = "jscontact"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "RFC 9553"
 license = "MIT"
+repository = "https://github.com/Its-Just-Nans/apksig"
+keywords = ["jscontact", "vcard", "card", "rfc9553"]
+categories = ["encoding", "serialization", "vcard", "rfc9553"]
+
+[features]
+default = ["typed"]
+typed = []
+
 
 [dependencies]
 serde = { version = "1.0.217", features = ["derive"] }

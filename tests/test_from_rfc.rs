@@ -1,8 +1,9 @@
 mod test {
 
     use jscontact::{
-        AddressComponentKind, CalendarKind, Card, CardKind, DateObject, DirectoryKind, LinkKind,
-        LocalizationObject, MediaKind, NameComponentKind, PersonalInfoLevel, TitleKind,
+        AddressComponentKind, CalendarKind, Card, CardKind, CardVersion, DateObject, DirectoryKind,
+        LinkKind, LocalizationObject, MediaKind, NameComponentKind, PersonalInfoKind,
+        PersonalInfoLevel, TitleKind,
     };
 
     #[test]
@@ -26,7 +27,7 @@ mod test {
     fn test_figure_06() {
         let json = include_bytes!("./rfc9553/figure_06.json");
         let card: Card = serde_json::from_slice(json).unwrap();
-        assert_eq!(card.version, "1.0");
+        assert_eq!(card.version, CardVersion::OneDotZero);
         assert_eq!(card.uid, "22B2C7DF-9120-4969-8460-05956FE6B065");
         assert_eq!(card.kind, Some(CardKind::Individual));
         let name = card.name.unwrap();
@@ -44,7 +45,7 @@ mod test {
         let json = include_bytes!("./rfc9553/figure_07.json");
 
         let card: Card = serde_json::from_slice(json).unwrap();
-        assert_eq!(card.version, "1.0");
+        assert_eq!(card.version, CardVersion::OneDotZero);
     }
 
     #[test]
@@ -320,18 +321,7 @@ mod test {
     #[test]
     fn test_figure_26() {
         let json = include_bytes!("./rfc9553/figure_26.json");
-        // {
-        //     "onlineServices": {
-        //         "x1": {
-        //             "uri": "xmpp:alice@example.com"
-        //         },
-        //         "x2": {
-        //             "service": "Mastodon",
-        //             "user": "@alice@example2.com",
-        //             "uri": "https://example2.com/@alice"
-        //         }
-        //     }
-        // }
+
         let card: Card = serde_json::from_slice(json).unwrap();
         let online_services = card.online_services.unwrap();
         assert_eq!(online_services.len(), 2);
@@ -701,15 +691,15 @@ mod test {
         let personal_info = card.personal_info.unwrap();
         assert_eq!(personal_info.len(), 3);
         let pi2 = personal_info.get("pi2").unwrap();
-        assert_eq!(pi2.kind, "expertise");
+        assert_eq!(pi2.kind, PersonalInfoKind::Expertise);
         assert_eq!(pi2.value, "chemistry");
         assert_eq!(pi2.level, Some(PersonalInfoLevel::High));
         let pi1 = personal_info.get("pi1").unwrap();
-        assert_eq!(pi1.kind, "hobby");
+        assert_eq!(pi1.kind, PersonalInfoKind::Hobby);
         assert_eq!(pi1.value, "reading");
         assert_eq!(pi1.level, Some(PersonalInfoLevel::High));
         let pi6 = personal_info.get("pi6").unwrap();
-        assert_eq!(pi6.kind, "interest");
+        assert_eq!(pi6.kind, PersonalInfoKind::Interest);
         assert_eq!(pi6.value, "r&b music");
         assert_eq!(pi6.level, Some(PersonalInfoLevel::Medium));
     }

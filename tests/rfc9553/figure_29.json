@@ -3,13 +3,13 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "calendars": {
-        "calA": {
-            "kind": "calendar",
-            "uri": "webcal://calendar.example.com/calA.ics"
-        },
-        "project-a": {
-            "kind": "freeBusy",
-            "uri": "https://calendar.example.com/busy/project-a"
-        }
+      "calA": {
+        "kind": "calendar",
+        "uri": "webcal://calendar.example.com/calA.ics"
+      },
+      "project-a": {
+        "kind": "freeBusy",
+        "uri": "https://calendar.example.com/busy/project-a"
+      }
     }
 }

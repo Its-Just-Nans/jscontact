@@ -1,22 +1,22 @@
 "preferredLanguages": {
-    "l1": {
-        "language": "en",
-        "contexts": {
-            "work": true
-        },
-        "pref": 1
+  "l1": {
+    "language": "en",
+    "contexts": {
+      "work": true
     },
-    "l2": {
-        "language": "fr",
-        "contexts": {
-            "work": true
-        },
-        "pref": 2
+    "pref": 1
+  },
+  "l2": {
+    "language": "fr",
+    "contexts": {
+      "work": true
     },
-    "l3": {
-        "language": "fr",
-        "contexts": {
-            "private": true
-        }
+    "pref": 2
+  },
+  "l3": {
+    "language": "fr",
+    "contexts": {
+      "private": true
     }
+  }
 }

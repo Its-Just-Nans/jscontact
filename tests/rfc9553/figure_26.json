@@ -3,13 +3,13 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "onlineServices": {
-        "x1": {
-            "uri": "xmpp:alice@example.com"
-        },
-        "x2": {
-            "service": "Mastodon",
-            "user": "@alice@example2.com",
-            "uri": "https://example2.com/@alice"
-        }
+      "x1": {
+        "uri": "xmpp:alice@example.com"
+      },
+      "x2": {
+        "service": "Mastodon",
+        "user": "@alice@example2.com",
+        "uri": "https://example2.com/@alice"
+      }
     }
 }

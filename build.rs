@@ -60,12 +60,11 @@ fn main() {
         let mut file_name = file_name.to_str().unwrap().to_string();
         let mut json_default = JSON_DEFAULT_CARD.to_string();
         match file_name.as_str() {
+            "figure_06.txt" => {
+                file_name.replace_range(file_name.len() - 4.., ".json");
+            }
             "figure_07.txt" => {
-                json_default = json_default.replace(
-                    r#"
-    "version": "1.0","#,
-                    "",
-                );
+                json_default = json_default.replace("\n    \"version\": \"1.0\",", "");
             }
             "figure_18.txt" => {
                 contents = format!(
@@ -74,6 +73,16 @@ fn main() {
 }}"#,
                     contents
                 );
+            }
+            "figure_20.txt" => {
+                contents = contents.replace("{\n  \"@type\": \"Card\",\n", "");
+                contents = contents[..contents.len() - 2].to_string();
+            }
+            "figure_35.txt" => {
+                contents = contents.replace("\n            ", "");
+            }
+            "figure_36.txt" => {
+                contents = format!("{}\n}}", contents);
             }
             "figure_39.txt" => {
                 let mut chars = contents.chars();
@@ -84,14 +93,13 @@ fn main() {
                 // remove first 4 spaces
                 contents = contents
                     .lines()
-                    .map(|line| line.chars().skip(4).collect())
+                    .map(|line| line.chars().skip(2).collect())
                     .collect::<Vec<String>>()
                     .join("\n");
             }
             "figure_14.txt" | "figure_11.txt" => {
                 json_default = json_default.replace(
-                    r#"
-    "uid": "22B2C7DF-9120-4969-8460-05956FE6B065","#,
+                    "\n    \"uid\": \"22B2C7DF-9120-4969-8460-05956FE6B065\",",
                     "",
                 );
             }

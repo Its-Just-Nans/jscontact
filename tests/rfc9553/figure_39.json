@@ -3,23 +3,23 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "name": {
-        "components": [
-            { "kind": "title", "value": "Mr." },
-            { "kind": "given", "value": "Ivan" },
-            { "kind": "given2", "value": "Petrovich" },
-            { "kind": "surname", "value": "Vasiliev" }
-        ]
+      "components": [
+        { "kind": "title", "value": "Mr." },
+        { "kind": "given", "value": "Ivan" },
+        { "kind": "given2", "value": "Petrovich" },
+        { "kind": "surname", "value": "Vasiliev" }
+      ]
     },
     "localizations": {
-        "uk-Cyrl": {
-            "name": {
-                "components": [
-                    { "kind": "title", "value": "г-н" },
-                    { "kind": "given", "value": "Иван" },
-                    { "kind": "given2", "value": "Петрович" },
-                    { "kind": "surname", "value": "Васильев" }
-                ]
-            }
+      "uk-Cyrl": {
+        "name": {
+          "components": [
+            { "kind": "title", "value": "г-н" },
+            { "kind": "given", "value": "Иван" },
+            { "kind": "given2", "value": "Петрович" },
+            { "kind": "surname", "value": "Васильев" }
+          ]
         }
+      }
     }
 }

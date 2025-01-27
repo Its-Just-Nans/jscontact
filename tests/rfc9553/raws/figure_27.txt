@@ -1,18 +1,18 @@
 "phones": {
-    "tel0": {
-        "contexts": {
-            "private": true
-        },
-        "features": {
-            "voice": true
-        },
-        "number": "tel:+1-555-555-5555;ext=5555",
-        "pref": 1
+  "tel0": {
+    "contexts": {
+      "private": true
     },
-    "tel3": {
-        "contexts": {
-            "work": true
-        },
-        "number": "tel:+1-201-555-0123"
-    }
+    "features": {
+      "voice": true
+    },
+    "number": "tel:+1-555-555-5555;ext=5555",
+    "pref": 1
+  },
+  "tel3": {
+    "contexts": {
+      "work": true
+    },
+    "number": "tel:+1-201-555-0123"
+  }
 }

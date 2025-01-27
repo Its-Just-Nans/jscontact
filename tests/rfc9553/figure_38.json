@@ -3,17 +3,17 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "media": {
-        "res45": {
-            "kind": "sound",
-            "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
-        },
-        "res47": {
-            "kind": "logo",
-            "uri": "https://www.example.com/pub/logos/abccorp.jpg"
-        },
-        "res1": {
-            "kind": "photo",
-            "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
-        }
+      "res45": {
+        "kind": "sound",
+        "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
+      },
+      "res47": {
+        "kind": "logo",
+        "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+      },
+      "res1": {
+        "kind": "photo",
+        "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+      }
     }
 }

@@ -3,16 +3,16 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "speakToAs": {
-        "grammaticalGender": "neuter",
-        "pronouns": {
-            "k19": {
-                "pronouns": "they/them",
-                "pref": 2
-            },
-            "k32": {
-                "pronouns": "xe/xir",
-                "pref": 1
-            }
+      "grammaticalGender": "neuter",
+      "pronouns": {
+        "k19": {
+          "pronouns": "they/them",
+          "pref": 2
+        },
+        "k32": {
+          "pronouns": "xe/xir",
+          "pref": 1
         }
+      }
     }
 }

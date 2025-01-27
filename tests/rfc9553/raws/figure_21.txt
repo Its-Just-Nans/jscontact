@@ -1,5 +1,5 @@
 "nicknames": {
-    "k391": {
-        "name": "Johnny"
-    }
+  "k391": {
+    "name": "Johnny"
+  }
 }

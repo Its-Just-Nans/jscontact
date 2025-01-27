@@ -3,15 +3,15 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "name": {
-        "components": [{
+      "components": [{
         "kind": "given",
         "value": "John",
         "phonetic": "/ˈdʒɑːn/"
-        }, {
+      }, {
         "kind": "surname",
         "value": "Smith",
         "phonetic": "/smɪθ/"
-        }],
-        "phoneticSystem": "ipa"
+      }],
+      "phoneticSystem": "ipa"
     }
 }

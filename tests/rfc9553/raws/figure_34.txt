@@ -1,5 +1,5 @@
 "cryptoKeys": {
-    "mykey1": {
-        "uri": "https://www.example.com/keys/jdoe.cer"
-    }
+  "mykey1": {
+    "uri": "https://www.example.com/keys/jdoe.cer"
+  }
 }

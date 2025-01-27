@@ -3,39 +3,39 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "addresses": {
-        "k26": {
-            "components": [
-                { "kind": "block", "value": "2-7" },
-                { "kind": "separator", "value": "-" },
-                { "kind": "number", "value": "2" },
-                { "kind": "separator", "value": " " },
-                { "kind": "district", "value": "Marunouchi" },
-                { "kind": "locality", "value": "Chiyoda-ku" },
-                { "kind": "region", "value": "Tokyo" },
-                { "kind": "separator", "value": " " },
-                { "kind": "postcode", "value": "100-8994" }
-            ],
-            "defaultSeparator": ", ",
-            "full": "2-7-2 Marunouchi, Chiyoda-ku, Tokyo 100-8994",
-            "isOrdered": true
-        }
+       "k26": {
+         "components": [
+           { "kind": "block", "value": "2-7" },
+           { "kind": "separator", "value": "-" },
+           { "kind": "number", "value": "2" },
+           { "kind": "separator", "value": " " },
+           { "kind": "district", "value": "Marunouchi" },
+           { "kind": "locality", "value": "Chiyoda-ku" },
+           { "kind": "region", "value": "Tokyo" },
+           { "kind": "separator", "value": " " },
+           { "kind": "postcode", "value": "100-8994" }
+         ],
+         "defaultSeparator": ", ",
+         "full": "2-7-2 Marunouchi, Chiyoda-ku, Tokyo 100-8994",
+         "isOrdered": true
+       }
     },
     "localizations": {
-        "jp": {
-            "addresses/k26": {
-                "components": [
-                    { "kind": "region", "value": "東京都" },
-                    { "kind": "locality", "value": "千代田区" },
-                    { "kind": "district", "value": "丸ノ内" },
-                    { "kind": "block", "value": "2-7" },
-                    { "kind": "separator", "value": "-" },
-                    { "kind": "number", "value": "2" },
-                    { "kind": "postcode", "value": "〒100-8994" }
-                ],
-                "defaultSeparator": "",
-                "full": "〒100-8994東京都千代田区丸ノ内2-7-2",
-                "isOrdered": true
-            }
+      "jp": {
+        "addresses/k26": {
+          "components": [
+            { "kind": "region", "value": "東京都" },
+            { "kind": "locality", "value": "千代田区" },
+            { "kind": "district", "value": "丸ノ内" },
+            { "kind": "block", "value": "2-7" },
+            { "kind": "separator", "value": "-" },
+            { "kind": "number", "value": "2" },
+            { "kind": "postcode", "value": "〒100-8994" }
+          ],
+          "defaultSeparator": "",
+          "full": "〒100-8994東京都千代田区丸ノ内2-7-2",
+          "isOrdered": true
         }
+      }
     }
 }

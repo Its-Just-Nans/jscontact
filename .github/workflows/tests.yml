@@ -16,5 +16,7 @@ jobs:
             - uses: actions/checkout@v3
             - name: Build
               run: cargo build --verbose
+            - name: Prepare for tests
+              run: python tests/get_figures.py
             - name: Run tests
               run: cargo test --verbose  -- --test-threads=1

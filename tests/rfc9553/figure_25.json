@@ -3,15 +3,15 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "emails": {
-        "e1": {
-            "contexts": {
-                "work": true
-            },
-            "address": "jqpublic@xyz.example.com"
+      "e1": {
+        "contexts": {
+          "work": true
         },
-        "e2": {
-            "address": "jane_doe@example.com",
-            "pref": 1
-        }
+        "address": "jqpublic@xyz.example.com"
+      },
+      "e2": {
+        "address": "jane_doe@example.com",
+        "pref": 1
+      }
     }
 }

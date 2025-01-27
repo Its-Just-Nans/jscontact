@@ -3,19 +3,19 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "titles": {
-        "le9": {
-            "kind": "title",
-            "name": "Research Scientist"
-        },
-        "k2": {
-            "kind": "role",
-            "name": "Project Leader",
-            "organizationId": "o2"
-        }
+      "le9": {
+        "kind": "title",
+        "name": "Research Scientist"
+      },
+      "k2": {
+        "kind": "role",
+        "name": "Project Leader",
+        "organizationId": "o2"
+      }
     },
     "organizations": {
-        "o2": {
-            "name": "ABC, Inc."
-        }
+      "o2": {
+        "name": "ABC, Inc."
+      }
     }
 }

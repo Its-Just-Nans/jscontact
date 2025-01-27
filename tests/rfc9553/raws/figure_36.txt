@@ -1,11 +1,10 @@
 "directories": {
-    "dir1": {
-        "kind": "entry",
-        "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf"
-    },
-    "dir2": {
-        "kind": "directory",
-        "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
-        "pref": 1
-    }
-}
+  "dir1": {
+    "kind": "entry",
+    "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf"
+  },
+  "dir2": {
+    "kind": "directory",
+    "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+    "pref": 1
+  }

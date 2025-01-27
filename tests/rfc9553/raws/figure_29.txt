@@ -1,10 +1,10 @@
 "calendars": {
-    "calA": {
-        "kind": "calendar",
-        "uri": "webcal://calendar.example.com/calA.ics"
-    },
-    "project-a": {
-        "kind": "freeBusy",
-        "uri": "https://calendar.example.com/busy/project-a"
-    }
+  "calA": {
+    "kind": "calendar",
+    "uri": "webcal://calendar.example.com/calA.ics"
+  },
+  "project-a": {
+    "kind": "freeBusy",
+    "uri": "https://calendar.example.com/busy/project-a"
+  }
 }

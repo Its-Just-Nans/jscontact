@@ -1,4 +1,4 @@
 "example.com:foo": "bar",
 "example.com:foo2": {
-    "bar": "baz"
+  "bar": "baz"
 }

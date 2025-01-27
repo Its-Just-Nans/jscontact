@@ -3,23 +3,23 @@
     "version": "1.0",
     "uid": "22B2C7DF-9120-4969-8460-05956FE6B065",
     "addresses": {
-        "k23": {
-            "contexts": {
-                "work": true
-            },
-            "components": [
-                { "kind": "number", "value": "54321" },
-                { "kind": "separator", "value": " " },
-                { "kind": "name", "value": "Oak St" },
-                { "kind": "locality", "value": "Reston" },
-                { "kind": "region", "value": "VA" },
-                { "kind": "separator", "value": " " },
-                { "kind": "postcode", "value": "20190" },
-                { "kind": "country", "value": "USA" }
-            ],
-            "countryCode": "US",
-            "defaultSeparator": ", ",
-            "isOrdered": true
-        }
+      "k23": {
+        "contexts": {
+          "work": true
+        },
+        "components": [
+          { "kind": "number", "value": "54321" },
+          { "kind": "separator", "value": " " },
+          { "kind": "name", "value": "Oak St" },
+          { "kind": "locality", "value": "Reston" },
+          { "kind": "region", "value": "VA" },
+          { "kind": "separator", "value": " " },
+          { "kind": "postcode", "value": "20190" },
+          { "kind": "country", "value": "USA" }
+        ],
+        "countryCode": "US",
+        "defaultSeparator": ", ",
+        "isOrdered": true
+      }
     }
 }

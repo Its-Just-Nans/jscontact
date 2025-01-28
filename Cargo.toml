@@ -1,6 +1,6 @@
 [package]
 name = "jscontact"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 description = "RFC 9553"
 license = "MIT"
@@ -10,6 +10,7 @@ keywords = ["jscontact", "vcard", "card", "rfc9553"]
 categories = ["encoding", "data-structures", "internationalization", "parsing"]
 documentation = "https://docs.rs/jscontact"
 exclude = [
+    "build.rs",               # build script to get figures from RFC 9553
     "tests/imported",         # imported tests with different license
     "tests/rfc9553/raws",     # raws figures from RFC 9553
     "tests/test_imported.rs", # test file for imported tests
@@ -17,7 +18,16 @@ exclude = [
 ]
 
 [features]
+# The "typed" feature is enabled by default
 default = ["typed"]
+
+# The typed feature enables the usage of the @type attributes in jscontact structs
+# This can be disabled with { default-features = false } in your Cargo.toml
+# Disabling this feature reduce the size of the library and the size of the serialized data
+# Note that disabling this feature can break serialization/deserialization of jscontact structs
+# because the @type attributes are used to determine the type of the jscontact struct
+# If the @type attributes are not present, the deserialization can fail for similars jscontact structs
+# see tests/test_localizations.rs for an example
 typed = []
 
 

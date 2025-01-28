@@ -1,12 +1,11 @@
-//! We force the typed feature to be enabled for this test
-//! If it's not enabled, the test will fail because some types are equivalent
-//! example [`crate::Title`] and [`crate::Nickname`] have very similar fields
-#![cfg(feature = "typed")]
-
 mod test {
 
     use jscontact::{Card, LocalizationObject};
 
+    // We force the typed feature to be enabled for this test
+    // If it's not enabled, the test will fail because some types are equivalent
+    // example [`crate::Title`] and [`crate::Nickname`] have very similar fields
+    #[cfg(feature = "typed")]
     #[test]
     fn test_localizations() {
         let json = serde_json::json!({

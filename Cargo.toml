@@ -1,6 +1,6 @@
 [package]
 name = "jscontact"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 description = "RFC 9553"
 license = "MIT"

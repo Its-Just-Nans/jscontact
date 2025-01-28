@@ -56,62 +56,90 @@ pub struct Card {
     /// The JSContact version of this Card.
     pub version: CardVersion,
     /// The date and time when the Card was created.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created: Option<String>,
     /// A unique identifier for the Card.
     pub uid: String,
     /// The kind of entity the Card represents (e.g., individual, group).
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<CardKind>,
     /// The language used in the Card (e.g., en, fr).
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub language: Option<String>,
     /// Members of a group Card, if applicable.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub members: Option<HashMap<String, bool>>,
     /// Identifier for the product that created the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prod_id: Option<String>,
     /// Related Cards with their relationship types.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub related_to: Option<HashMap<String, Relation>>,
     /// The last modification time of the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub updated: Option<String>,
     /// The name of the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<Name>,
     /// Nicknames of the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub nicknames: Option<HashMap<String, Nickname>>,
     /// Organizations associated with the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub organizations: Option<HashMap<String, Organization>>,
     /// How to address or refer to the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub speak_to_as: Option<SpeakToAs>,
     /// Job titles or roles of the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub titles: Option<HashMap<String, Title>>,
     /// Email addresses for contacting the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub emails: Option<HashMap<String, EmailAddress>>,
     /// Online services or social media associated with the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub online_services: Option<HashMap<String, OnlineService>>,
     /// Phone numbers for contacting the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phones: Option<HashMap<String, Phone>>,
     /// Preferred languages for communication.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_languages: Option<HashMap<String, LanguagePref>>,
     /// The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub calendars: Option<HashMap<String, Calendar>>,
     /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduling_addresses: Option<HashMap<String, SchedulingAddress>>,
     /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub localizations: Option<HashMap<String, HashMap<String, LocalizationObject>>>,
     /// The memorable dates and events for the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub anniversaries: Option<HashMap<String, Anniversary>>,
     /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub addresses: Option<HashMap<String, Address>>,
     /// The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub crypto_keys: Option<HashMap<String, CryptoKey>>,
     /// The directories containing information about the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub directories: Option<HashMap<String, Directory>>,
     /// The links to resources that do not fit any of the other use-case-specific resource properties.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub links: Option<HashMap<String, Link>>,
     /// The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media: Option<HashMap<String, Media>>,
     /// The set of free-text keywords, also known as tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub keywords: Option<HashMap<String, bool>>,
     /// The free-text notes that are associated with the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<HashMap<String, Note>>,
     /// The personal information of the entity represented by the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub personal_info: Option<HashMap<String, PersonalInfo>>,
 }
 
@@ -179,19 +207,25 @@ pub enum CardVersion {
 pub struct Calendar {
     /// The @type property value MUST be "Calendar", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     calendar_type: Option<CalendarType>,
     /// The kind of the calendar.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<CalendarKind>,
     /// The media type [RFC2046] of the resource identified by the uri property value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The resource value.
     pub uri: String,
     /// The contexts in which to use this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the resource in relation to other resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -241,15 +275,19 @@ impl From<String> for CalendarKind {
 pub struct SchedulingAddress {
     /// The JSContact type of the object. The value MUST be "SchedulingAddress", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     scheduling_address_type: Option<SchedulingAddressType>,
     /// The address to use for calendar scheduling with the contact.
     pub uri: String,
     /// The contexts in which to use the scheduling address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the scheduling address in relation to other scheduling addresses.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the scheduling address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -313,19 +351,25 @@ impl From<String> for CardKind {
 pub struct CryptoKey {
     /// The @type property value MUST be "CryptoKey", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     crypto_key_type: Option<CryptoKeyType>,
     /// The resource value.
     pub uri: String,
     /// The media type [RFC2046] of the resource identified by the uri property value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The kind of the resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
     /// The contexts in which to use this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the resource in relation to other resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -355,21 +399,28 @@ impl CryptoKey {
 pub struct Directory {
     /// The @type property value MUST be "Directory", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     directory_type: Option<DirectoryType>,
     /// The kind of the directory.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<DirectoryKind>,
     /// The resource value.
     pub uri: String,
     /// The media type [RFC2046] of the resource identified by the uri property value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the resource in relation to other resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
     /// The position of the directory resource in the list of all Directory objects having the same kind property value in the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub list_as: Option<u64>,
 }
 
@@ -495,6 +546,7 @@ pub enum LocalizationObject {
 pub struct Media {
     /// The @type property value MUST be "Media", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     media_hidden_type: Option<MediaType>,
     /// The kind of the media.
@@ -502,12 +554,16 @@ pub struct Media {
     /// The resource value.
     pub uri: String,
     /// The media type [RFC2046] of the resource identified by the uri property value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the resource in relation to other resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -563,19 +619,25 @@ impl From<String> for MediaKind {
 pub struct Link {
     /// The @type property value MUST be "Link", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     link_type: Option<LinkType>,
     /// The kind of the link.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<LinkKind>,
     /// The resource value.
     pub uri: String,
     /// The media type [RFC2046] of the resource identified by the uri property value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// The preference of the resource in relation to other resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// A custom label for the value.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -622,9 +684,11 @@ impl From<String> for LinkKind {
 pub struct Relation {
     /// The JSContact type of the object. Must be "Relation".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     relation_type: Option<RelationType>,
     /// The relationship types to related Cards.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub relation: Option<HashMap<RelationshipType, bool>>,
 }
 
@@ -690,21 +754,29 @@ enum RelationType {
 pub struct Name {
     /// The JSContact type of the object. The value MUST be "Name", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     name_type: Option<NameType>,
     /// Components making up the name (e.g., given name, surname).
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<NameComponent>>,
     /// Whether the name components are ordered.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_ordered: Option<bool>,
     /// Default separator between name components.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_separator: Option<String>,
     /// The full name as a single string.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub full: Option<String>,
     /// Custom sorting order for the name components.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_as: Option<HashMap<String, String>>,
     /// The script used in the phonetic property.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic_script: Option<String>,
     /// The phonetic system used in the phonetic property.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic_system: Option<PhoneticSystem>,
 }
 
@@ -750,6 +822,7 @@ enum NameType {
 pub struct NameComponent {
     /// The JSContact type of the object. Must be "NameComponent".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     name_component_type: Option<NameComponentType>,
     /// The value of the name component (e.g., "John").
@@ -757,6 +830,7 @@ pub struct NameComponent {
     /// The kind of the name component (e.g., given, surname).
     pub kind: NameComponentKind,
     /// The phonetic representation of the name component.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic: Option<String>,
 }
 
@@ -826,13 +900,16 @@ impl From<String> for NameComponentKind {
 pub struct Nickname {
     /// The JSContact type of the object. Must be "Nickname".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     nickname_type: Option<NicknameType>,
     /// The nickname value.
     pub name: String,
     /// Contexts in which to use the nickname.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the nickname relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
 }
 
@@ -850,15 +927,20 @@ enum NicknameType {
 pub struct Organization {
     /// The JSContact type of the object. Must be "Organization".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     org_type: Option<OrganizationType>,
     /// The name of the organization.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// Organizational units within the organization.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub units: Option<Vec<OrgUnit>>,
     /// Custom sorting order for the organization.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_as: Option<String>,
     /// Contexts in which the organization is relevant.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
 }
 
@@ -876,11 +958,13 @@ enum OrganizationType {
 pub struct OrgUnit {
     /// The JSContact type of the object. Must be "OrgUnit".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     unit_type: Option<OrgUnitType>,
     /// The name of the organizational unit.
     pub name: String,
     /// Custom sorting order for the organizational unit.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_as: Option<String>,
 }
 
@@ -910,11 +994,14 @@ impl OrgUnit {
 pub struct SpeakToAs {
     /// The JSContact type of the object. Must be "SpeakToAs".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     speak_to_as_type: Option<SpeakToAsType>,
     /// Grammatical gender to use in salutations.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub grammatical_gender: Option<GrammaticalGender>,
     /// Pronouns associated with the entity.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pronouns: Option<HashMap<String, Pronouns>>,
 }
 
@@ -951,13 +1038,16 @@ enum SpeakToAsType {
 pub struct Pronouns {
     /// The JSContact type of the object. Must be "Pronouns".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     pronoun_type: Option<PronounsType>,
     /// The pronouns value (e.g., "they/them").
     pub pronouns: String,
     /// Contexts in which to use the pronouns.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the pronouns relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
 }
 
@@ -988,13 +1078,16 @@ impl Pronouns {
 pub struct Title {
     /// The JSContact type of the object. Must be "Title".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     title_type: Option<TitleType>,
     /// The title or role name.
     pub name: String,
     /// The kind of title (e.g., title, role).
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<TitleKind>,
     /// Identifier of the organization associated with this title.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub organization_id: Option<String>,
 }
 
@@ -1045,15 +1138,19 @@ impl From<String> for TitleKind {
 pub struct EmailAddress {
     /// The JSContact type of the object. Must be "EmailAddress".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     email_type: Option<EmailAddressType>,
     /// The email address.
     pub address: String,
     /// Contexts in which to use the email address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the email address relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
     /// Custom label for the email address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -1085,19 +1182,26 @@ impl EmailAddress {
 pub struct OnlineService {
     /// The JSContact type of the object. Must be "OnlineService".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     service_type: Option<OnlineServiceType>,
     /// The name of the online service or protocol.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service: Option<String>,
     /// The URI identifying the entity on the service.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uri: Option<String>,
     /// The username or handle on the online service.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<String>,
     /// Contexts in which to use the online service.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the service relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
     /// Custom label for the online service.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -1115,17 +1219,22 @@ enum OnlineServiceType {
 pub struct Phone {
     /// The JSContact type of the object. Must be "Phone".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     phone_type: Option<PhoneType>,
     /// The phone number, either as a URI or free text.
     pub number: String,
     /// Contact features the phone number supports
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub features: Option<HashMap<PhoneFeature, bool>>,
     /// Contexts in which to use the phone number.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the phone number relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
     /// Custom label for the phone number.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -1192,13 +1301,16 @@ impl Phone {
 pub struct LanguagePref {
     /// The JSContact type of the object. Must be "LanguagePref".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     lang_pref_type: Option<LanguagePrefType>,
     /// The preferred language as a language tag (e.g., en, fr).
     pub language: String,
     /// Contexts in which to use the preferred language.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<Context, bool>>,
     /// Preference of the language relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u32>,
 }
 
@@ -1229,6 +1341,7 @@ impl LanguagePref {
 pub struct Anniversary {
     /// The JSContact type of the object. Must be "Anniversary".
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     anniversary_type: Option<AnniversaryType>,
     /// The date of the anniversary.
@@ -1236,8 +1349,10 @@ pub struct Anniversary {
     /// The kind of anniversary
     pub kind: AnniversaryKind,
     /// Contexts in which to use the anniversary.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<String, bool>>,
     /// Preference of the anniversary relative to others.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub place: Option<Address>,
 }
 
@@ -1303,6 +1418,7 @@ pub enum DateObject {
 pub struct Timestamp {
     /// The JSContact type of the object. The value MUST be "Timestamp", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     timestamp_type: Option<TimestampType>,
 
@@ -1335,18 +1451,23 @@ impl Timestamp {
 pub struct PartialDate {
     /// The JSContact type of the object. The value MUST be "PartialDate", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     partial_date_type: Option<PartialDateType>,
     /// The calendar year.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub year: Option<u64>,
     /// The calendar month, represented as the integers 1 <= month <= 12. If this property is set, then either the year or the day property MUST be set.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub month: Option<u32>,
     /// The calendar month day, represented as the integers 1 <= day <= 31, depending on the validity within the month and year. If this property is set, then the month property MUST be set.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub day: Option<u32>,
 
     /// The calendar system in which this date occurs, in lowercase.  This MUST be either a calendar system name registered as a Common Locale Data Repository (CLDR) [RFC7529] or a vendor-specific value.
     /// The year, month, and day still MUST be represented in the Gregorian calendar.
     /// Note that the year property might be required to convert the date between the Gregorian calendar and the respective calendar system.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub calendar_scale: Option<String>,
 }
 
@@ -1364,29 +1485,41 @@ enum PartialDateType {
 pub struct Address {
     /// The JSContact type of the object. The value MUST be "Address", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     address_type: Option<AddressType>,
     /// The components that make up the address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<AddressComponent>>,
     /// The indicator if the address components in the components property are ordered.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_ordered: Option<bool>,
     /// The Alpha-2 country code [ISO.3166-1].
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     /// A "geo:" URI [RFC5870] for the address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub coordinates: Option<String>,
     /// The time zone in which the address is located. This MUST be a time zone name registered in the IANA Time Zone Database [IANA-TZ].
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub time_zone: Option<String>,
     /// The contexts in which to use this address.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<HashMap<AddressContext, bool>>,
     /// The full address, including street, region, or country. The purpose of this property is to define an address, even if the individual address components are not known.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub full: Option<String>,
     /// The default separator to insert between address component values when concatenating all address component values to a single String.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_separator: Option<String>,
     /// The preference of the address in relation to other addresses.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pref: Option<u64>,
     /// The script used in the value of the AddressComponent phonetic property.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic_script: Option<String>,
     /// The phonetic system used in the AddressComponent phonetic property.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic_system: Option<PhoneticSystem>,
 }
 
@@ -1418,6 +1551,7 @@ enum AddressType {
 pub struct AddressComponent {
     /// The JSContact type of the object. The value MUST be "AddressComponent", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     component_type: Option<AddressComponentType>,
     /// The value of the address component.
@@ -1425,6 +1559,7 @@ pub struct AddressComponent {
     /// The kind of the address component.
     pub kind: AddressComponentKind,
     /// The pronunciation of the name component. If this property is set, then at least one of the Address object phoneticSystem or phoneticScript properties MUST be set.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phonetic: Option<String>,
 }
 
@@ -1521,13 +1656,16 @@ impl From<String> for AddressComponentKind {
 pub struct Note {
     /// The JSContact type of the object. The value MUST be "Note", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     note_type: Option<NoteType>,
     /// The free-text value of this note.
     pub note: String,
     /// The date and time when this note was created.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created: Option<String>,
     /// The author of this note.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub author: Option<Author>,
 }
 
@@ -1545,11 +1683,14 @@ enum NoteType {
 pub struct Author {
     /// The JSContact type of the object. The value MUST be "Author", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     author_type: Option<AuthorType>,
     /// The name of this author.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// The URI value that identifies the author.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uri: Option<String>,
 }
 
@@ -1567,6 +1708,7 @@ enum AuthorType {
 pub struct PersonalInfo {
     ///The JSContact type of the object.  The value MUST be "PersonalInfo", if set.
     #[cfg(feature = "typed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "@type")]
     personal_info_type: Option<PersonalInfoType>,
     /// The kind of personal information.
@@ -1574,10 +1716,13 @@ pub struct PersonalInfo {
     /// The actual information.
     pub value: String,
     /// The level of expertise or engagement in hobby or interest.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub level: Option<PersonalInfoLevel>,
     /// The position of the personal information in the list of all PersonalInfo objects that have the same kind property value in the Card.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub list_as: Option<u64>,
     /// A custom label.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 

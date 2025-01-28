@@ -1,12 +1,11 @@
 [package]
 name = "jscontact"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "RFC 9553"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Its-Just-Nans/jscontact"
-issues = "https://github.com/Its-Just-Nans/jscontact/issues"
 keywords = ["jscontact", "vcard", "card", "rfc9553"]
 categories = ["encoding", "data-structures", "internationalization", "parsing"]
 documentation = "https://docs.rs/jscontact"

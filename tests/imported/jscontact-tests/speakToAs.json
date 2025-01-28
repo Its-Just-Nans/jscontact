@@ -1,0 +1,18 @@
+{
+  "speakToAs": {
+    "grammaticalGender": "neuter",
+    "pronouns": {
+      "k19": {
+        "pronouns": "they/them",
+        "pref": 2
+      },
+      "k32": {
+        "pronouns": "xe/xir",
+        "pref": 1
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "34e3c736-d992-436b-b513-e23c952c895e",
+  "version": "1.0"
+}

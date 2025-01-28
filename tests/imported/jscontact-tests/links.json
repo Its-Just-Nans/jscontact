@@ -1,0 +1,15 @@
+{
+  "links": {
+    "link1": {
+      "uri": "https://example.com"
+    },
+    "link3": {
+      "kind": "contact",
+      "uri": "mailto:contact@example.com",
+      "pref": 1
+    }
+  },
+  "@type": "Card",
+  "uid": "f168334a-8ba8-48c2-87c0-187aef67f967",
+  "version": "1.0"
+}

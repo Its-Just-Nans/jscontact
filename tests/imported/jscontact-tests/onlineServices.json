@@ -1,0 +1,17 @@
+{
+  "onlineServices": {
+    "x1": {
+      "uri": "xmpp:alice@example.com",
+      "vCardName": "impp"
+    },
+    "x2": {
+      "service": "Mastodon",
+      "user": "@alice@example2.com",
+      "uri": "https://example2.com/@alice",
+      "label": "foo"
+    }
+  },
+  "@type": "Card",
+  "uid": "be1a8cca-4463-4d0f-9d28-faf2e53039df",
+  "version": "1.0"
+}

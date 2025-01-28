@@ -1,0 +1,15 @@
+{
+  "schedulingAddresses": {
+    "sched1": {
+      "uri": "mailto:janedoe@example.com",
+      "label": "bar",
+      "contexts": {
+        "work": true
+      },
+      "pref": 3
+    }
+  },
+  "@type": "Card",
+  "uid": "af6effcc-4db6-4a1c-a087-6f1a4412c06f",
+  "version": "1.0"
+}

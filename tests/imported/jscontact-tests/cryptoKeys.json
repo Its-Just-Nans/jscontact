@@ -1,0 +1,13 @@
+{
+  "cryptoKeys": {
+    "mykey1": {
+      "uri": "https://www.example.com/keys/jdoe.cer"
+    },
+    "mykey2": {
+      "uri": "https://example.com/bar.key"
+    }
+  },
+  "@type": "Card",
+  "uid": "36245dfc-78aa-4745-82c2-aa759cf74382",
+  "version": "1.0"
+}

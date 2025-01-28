@@ -1,0 +1,13 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "given",
+        "value": "Jane"
+      }
+    ]
+  },
+  "@type": "Card",
+  "uid": "1df98c86-4ff1-4b75-9cb1-5c1e423e2aca",
+  "version": "1.0"
+}

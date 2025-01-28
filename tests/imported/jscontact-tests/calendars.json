@@ -1,0 +1,15 @@
+{
+  "calendars": {
+    "calA": {
+      "kind": "calendar",
+      "uri": "webcal://calendar.example.com/calA.ics"
+    },
+    "project-a": {
+      "kind": "freeBusy",
+      "uri": "https://calendar.example.com/busy/project-a"
+    }
+  },
+  "@type": "Card",
+  "uid": "0ad7f697-0ae9-4f64-a708-982da122e8cf",
+  "version": "1.0"
+}

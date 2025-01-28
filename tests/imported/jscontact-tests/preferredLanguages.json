@@ -1,0 +1,27 @@
+{
+  "preferredLanguages": {
+    "l1": {
+      "language": "en",
+      "contexts": {
+        "work": true
+      },
+      "pref": 1
+    },
+    "l2": {
+      "language": "fr",
+      "contexts": {
+        "work": true
+      },
+      "pref": 2
+    },
+    "l3": {
+      "language": "fr",
+      "contexts": {
+        "private": true
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "74a4766d-c102-4a20-8019-fc5411253ae8",
+  "version": "1.0"
+}

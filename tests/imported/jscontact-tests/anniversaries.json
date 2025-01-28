@@ -1,0 +1,25 @@
+{
+  "anniversaries": {
+    "k8": {
+      "kind": "birth",
+      "date": {
+        "year": 1953,
+        "month": 4,
+        "day": 15
+      }
+    },
+    "k9": {
+      "kind": "death",
+      "date": {
+        "@type": "Timestamp",
+        "utc": "2019-10-15T23:10:00Z"
+      },
+      "place": {
+        "full": "4445 Tree Street\nNew England, ND 58647\nUSA"
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "5bb81d84-62ae-4816-82c4-deff4775e586",
+  "version": "1.0"
+}

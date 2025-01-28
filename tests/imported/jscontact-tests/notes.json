@@ -1,0 +1,14 @@
+{
+  "notes": {
+    "n1": {
+      "note": "Open office hours are 1600 to 1715 EST, Mon-Fri",
+      "created": "2022-11-23T15:01:32Z",
+      "author": {
+        "name": "John"
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "483a0264-b4c4-4169-83db-74a4b4e2e5f9",
+  "version": "1.0"
+}

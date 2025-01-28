@@ -1,0 +1,22 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "given",
+        "value": "Diego"
+      },
+      {
+        "kind": "surname",
+        "value": "Rivera"
+      },
+      {
+        "kind": "surname2",
+        "value": "Barrientos"
+      }
+    ],
+    "isOrdered": true
+  },
+  "@type": "Card",
+  "uid": "42ec5d55-9fea-46ce-8497-45c1ed11a63d",
+  "version": "1.0"
+}

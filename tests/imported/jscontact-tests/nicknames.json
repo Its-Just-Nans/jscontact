@@ -1,0 +1,16 @@
+{
+  "nicknames": {
+    "n1": {
+      "name": "Johnny"
+    },
+    "n2": {
+      "name": "The John",
+      "contexts": {
+        "work": true
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "d84797ca-8f4d-4d8f-b8be-7fef8ba33b6d",
+  "version": "1.0"
+}

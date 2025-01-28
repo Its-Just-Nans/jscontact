@@ -1,0 +1,25 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "given",
+        "value": "Robert"
+      },
+      {
+        "kind": "given2",
+        "value": "Pau"
+      },
+      {
+        "kind": "surname",
+        "value": "Shou Chang"
+      }
+    ],
+    "sortAs": {
+      "surname": "Pau Shou Chang",
+      "given": "Robert"
+    }
+  },
+  "@type": "Card",
+  "uid": "421cee68-0336-4e04-9836-aa1d20bc1c0f",
+  "version": "1.0"
+}

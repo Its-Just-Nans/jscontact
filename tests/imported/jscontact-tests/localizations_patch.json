@@ -1,0 +1,19 @@
+{
+  "name": {
+    "full": "Gabriel Garc\u00eda M\u00e1rquez"
+  },
+  "titles": {
+    "t1": {
+      "kind": "title",
+      "name": "novelist"
+    }
+  },
+  "localizations": {
+    "es": {
+      "titles/t1/name": "autor"
+    }
+  },
+  "@type": "Card",
+  "uid": "fc333f27-eade-454c-886d-baf8cf3f3eda",
+  "version": "1.0"
+}

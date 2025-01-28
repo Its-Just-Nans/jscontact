@@ -1,0 +1,16 @@
+{
+  "vCardProps": [
+    [
+      "x-foo",
+      {
+        "group": "item2",
+        "pref": 1
+      },
+      "unknown",
+      "bar"
+    ]
+  ],
+  "@type": "Card",
+  "uid": "a729d1ec-f497-48d2-99ab-507a4f935605",
+  "version": "1.0"
+}

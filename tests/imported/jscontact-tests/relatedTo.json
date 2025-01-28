@@ -1,0 +1,15 @@
+{
+  "relatedTo": {
+    "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6": {
+      "relation": {
+        "friend": true
+      }
+    },
+    "8cacdfb7d1ffdb59@example.com": {
+      "relation": {}
+    }
+  },
+  "@type": "Card",
+  "uid": "a9d1f202-a3f6-4e23-bfa3-b5ad032608d7",
+  "version": "1.0"
+}

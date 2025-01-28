@@ -1,0 +1,16 @@
+{
+  "name": {
+    "full": "Jane Doe"
+  },
+  "vCardProps": [
+    [
+      "photo",
+      {},
+      "uri",
+      "https://example.com/hello.jpg"
+    ]
+  ],
+  "@type": "Card",
+  "uid": "bb849ea3-5a74-4cb0-b6d7-e1fdeb1796ce",
+  "version": "1.0"
+}

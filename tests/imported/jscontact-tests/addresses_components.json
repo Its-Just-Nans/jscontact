@@ -1,0 +1,75 @@
+{
+  "addresses": {
+    "a1": {
+      "components": [
+        {
+          "kind": "apartment",
+          "value": "apartment-val"
+        },
+        {
+          "kind": "block",
+          "value": "block-val"
+        },
+        {
+          "kind": "building",
+          "value": "building-val"
+        },
+        {
+          "kind": "country",
+          "value": "country-val"
+        },
+        {
+          "kind": "direction",
+          "value": "direction-val"
+        },
+        {
+          "kind": "district",
+          "value": "district-val"
+        },
+        {
+          "kind": "floor",
+          "value": "floor-val"
+        },
+        {
+          "kind": "landmark",
+          "value": "landmark-val"
+        },
+        {
+          "kind": "locality",
+          "value": "locality-val"
+        },
+        {
+          "kind": "name",
+          "value": "name-val"
+        },
+        {
+          "kind": "number",
+          "value": "number-val"
+        },
+        {
+          "kind": "postcode",
+          "value": "postcode-val"
+        },
+        {
+          "kind": "postOfficeBox",
+          "value": "postOfficeBox-val"
+        },
+        {
+          "kind": "region",
+          "value": "region-val"
+        },
+        {
+          "kind": "room",
+          "value": "room-val"
+        },
+        {
+          "kind": "subdistrict",
+          "value": "subdistrict-val"
+        }
+      ]
+    }
+  },
+  "@type": "Card",
+  "uid": "0fa7f0a6-041c-4f79-affb-47bba4754d12",
+  "version": "1.0"
+}

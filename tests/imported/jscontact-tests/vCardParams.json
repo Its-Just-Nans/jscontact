@@ -1,0 +1,13 @@
+{
+  "emails": {
+    "e1": {
+      "address": "jqpublic@xyz.example.com",
+      "vCardParams": {
+        "x-foo": "bar"
+      }
+    }
+  },
+  "@type": "Card",
+  "uid": "6e46111e-034d-457f-aa19-85aa37cb47d2",
+  "version": "1.0"
+}

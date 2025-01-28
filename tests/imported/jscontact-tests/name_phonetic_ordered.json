@@ -1,0 +1,21 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "given",
+        "value": "John",
+        "phonetic": "/d\u0361\u0292\u0251n/"
+      },
+      {
+        "kind": "surname",
+        "value": "Smith",
+        "phonetic": "/sm\u026a\u03b8/"
+      }
+    ],
+    "phoneticSystem": "ipa",
+    "isOrdered": true
+  },
+  "@type": "Card",
+  "uid": "d2620f6c-cec0-4733-aba5-3b16d394b92e",
+  "version": "1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "example.com:foo": "bar",
+  "name": {
+    "full": "Jane Doe",
+    "example.com:foo2": {
+      "bar": "baz"
+    }
+  },
+  "@type": "Card",
+  "uid": "79a2bee5-80d8-4536-99eb-e696c5c9bb0b",
+  "version": "1.0"
+}

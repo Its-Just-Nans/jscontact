@@ -1,0 +1,42 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "title",
+        "value": "Ms."
+      },
+      {
+        "kind": "given",
+        "value": "Mary Jean"
+      },
+      {
+        "kind": "given2",
+        "value": "Elizabeth"
+      },
+      {
+        "kind": "surname",
+        "value": "van Halen"
+      },
+      {
+        "kind": "surname2",
+        "value": "Barrientos"
+      },
+      {
+        "kind": "generation",
+        "value": "III"
+      },
+      {
+        "kind": "separator",
+        "value": ", "
+      },
+      {
+        "kind": "credential",
+        "value": "PhD"
+      }
+    ],
+    "isOrdered": true
+  },
+  "@type": "Card",
+  "uid": "ee69b868-014e-4d8f-a23e-e47d0b79451d",
+  "version": "1.0"
+}

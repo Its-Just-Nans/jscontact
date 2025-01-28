@@ -1,0 +1,19 @@
+{
+  "organizations": {
+    "o1": {
+      "name": "ABC, Inc.",
+      "units": [
+        {
+          "name": "North American Division"
+        },
+        {
+          "name": "Marketing"
+        }
+      ],
+      "sortAs": "ABC"
+    }
+  },
+  "@type": "Card",
+  "uid": "45c531fe-2252-4c0e-b633-a37bd25e2f80",
+  "version": "1.0"
+}

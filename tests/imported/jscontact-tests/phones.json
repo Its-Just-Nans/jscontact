@@ -1,0 +1,23 @@
+{
+  "phones": {
+    "tel0": {
+      "contexts": {
+        "private": true
+      },
+      "features": {
+        "voice": true
+      },
+      "number": "tel:+1-555-555-5555;ext=5555",
+      "pref": 1
+    },
+    "tel3": {
+      "contexts": {
+        "work": true
+      },
+      "number": "tel:+1-201-555-0123"
+    }
+  },
+  "@type": "Card",
+  "uid": "c8a491e4-af68-4c88-a22c-fbe77f351c88",
+  "version": "1.0"
+}

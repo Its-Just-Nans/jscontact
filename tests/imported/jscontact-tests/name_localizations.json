@@ -1,0 +1,71 @@
+{
+  "name": {
+    "components": [
+      {
+        "kind": "title",
+        "value": "title"
+      },
+      {
+        "kind": "given",
+        "value": "given"
+      },
+      {
+        "kind": "given2",
+        "value": "given2"
+      },
+      {
+        "kind": "surname",
+        "value": "surname"
+      },
+      {
+        "kind": "surname2",
+        "value": "surname2"
+      },
+      {
+        "kind": "credential",
+        "value": "credential"
+      },
+      {
+        "kind": "generation",
+        "value": "generation"
+      }
+    ]
+  },
+  "localizations": {
+    "de": {
+      "name/components": [
+        {
+          "kind": "title",
+          "value": "anrede"
+        },
+        {
+          "kind": "given",
+          "value": "vorname"
+        },
+        {
+          "kind": "given2",
+          "value": "vorname2"
+        },
+        {
+          "kind": "surname",
+          "value": "nachname"
+        },
+        {
+          "kind": "surname2",
+          "value": "nachname2"
+        },
+        {
+          "kind": "credential",
+          "value": "titel"
+        },
+        {
+          "kind": "generation",
+          "value": "generation"
+        }
+      ]
+    }
+  },
+  "@type": "Card",
+  "uid": "d3214c3f-ddde-4a48-acee-a9690628f587",
+  "version": "1.0"
+}

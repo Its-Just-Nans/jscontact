@@ -1,0 +1,19 @@
+{
+  "name": {
+    "defaultSeparator": "X",
+    "components": [
+      {
+        "kind": "given",
+        "value": "Jane"
+      },
+      {
+        "kind": "surname",
+        "value": "Doe"
+      }
+    ],
+    "isOrdered": true
+  },
+  "@type": "Card",
+  "uid": "274bde3f-0e34-4748-a9b0-0ca6fdc6cc40",
+  "version": "1.0"
+}

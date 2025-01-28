@@ -11,8 +11,8 @@ categories = ["encoding", "data-structures", "internationalization", "parsing"]
 documentation = "https://docs.rs/jscontact"
 exclude = [
     "build.rs",               # build script to get figures from RFC 9553
-    "tests/imported",         # imported tests with different license
-    "tests/rfc9553/raws",     # raws figures from RFC 9553
+    "tests/imported/",        # imported tests with different license
+    "tests/rfc9553/raws/",    # raws figures from RFC 9553
     "tests/test_imported.rs", # test file for imported tests
     "tests/get_figures.py",   # python script to get figures from RFC 9553
 ]
@@ -33,6 +33,7 @@ typed = []
 
 [dependencies]
 serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.89"
 
 [dev-dependencies]
 serde_json = "1.0.89"

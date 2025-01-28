@@ -1,0 +1,17 @@
+{
+  "emails": {
+    "e1": {
+      "contexts": {
+        "work": true
+      },
+      "address": "jqpublic@xyz.example.com"
+    },
+    "e2": {
+      "address": "jane_doe@example.com",
+      "pref": 1
+    }
+  },
+  "@type": "Card",
+  "uid": "dc5ac6e1-c35a-4f75-849c-d336bead8012",
+  "version": "1.0"
+}

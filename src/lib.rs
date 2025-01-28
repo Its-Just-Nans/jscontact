@@ -16,7 +16,11 @@
 //!     "version": "1.0",
 //!     "uid": "1234"
 //! });
-//! let card: Card = serde_json::from_value(json).unwrap();
+//! let card = Card::from_value(json).unwrap();
+//!
+//! let str = card.to_string().unwrap();
+//!
+//! let card = Card::try_from_str(str).unwrap();
 //! ```
 //!
 //! Simple creation example:
@@ -24,7 +28,7 @@
 //! use jscontact::{Card, CardKind, Name, NameComponent, NameComponentKind};
 //! use serde_json;
 //!
-//! let mut card = Card::new_with_latest_version("1234");
+//! let mut card = Card::new_with_latest_version("my:uri");
 //! card.kind = Some(CardKind::Individual);
 //! let json = serde_json::to_string(&card).unwrap();
 //! ```
@@ -42,159 +46,14 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+pub mod card;
+pub use card::Card;
+
 mod resource;
 pub use resource::Resource;
 
-/// Represents the primary Card object as defined in RFC 9553, storing metadata and contact properties.
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Card {
-    /// The JSContact type of the Card object. Must be "Card".
-    #[cfg(feature = "typed")]
-    #[serde(rename = "@type")]
-    card_type: String,
-    /// The JSContact version of this Card.
-    pub version: CardVersion,
-    /// The date and time when the Card was created.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub created: Option<String>,
-    /// A unique identifier for the Card.
-    pub uid: String,
-    /// The kind of entity the Card represents (e.g., individual, group).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub kind: Option<CardKind>,
-    /// The language used in the Card (e.g., en, fr).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub language: Option<String>,
-    /// Members of a group Card, if applicable.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub members: Option<HashMap<String, bool>>,
-    /// Identifier for the product that created the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub prod_id: Option<String>,
-    /// Related Cards with their relationship types.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub related_to: Option<HashMap<String, Relation>>,
-    /// The last modification time of the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub updated: Option<String>,
-    /// The name of the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<Name>,
-    /// Nicknames of the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub nicknames: Option<HashMap<String, Nickname>>,
-    /// Organizations associated with the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub organizations: Option<HashMap<String, Organization>>,
-    /// How to address or refer to the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub speak_to_as: Option<SpeakToAs>,
-    /// Job titles or roles of the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub titles: Option<HashMap<String, Title>>,
-    /// Email addresses for contacting the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub emails: Option<HashMap<String, EmailAddress>>,
-    /// Online services or social media associated with the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub online_services: Option<HashMap<String, OnlineService>>,
-    /// Phone numbers for contacting the entity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub phones: Option<HashMap<String, Phone>>,
-    /// Preferred languages for communication.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub preferred_languages: Option<HashMap<String, LanguagePref>>,
-    /// The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub calendars: Option<HashMap<String, Calendar>>,
-    /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub scheduling_addresses: Option<HashMap<String, SchedulingAddress>>,
-    /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub localizations: Option<HashMap<String, HashMap<String, LocalizationObject>>>,
-    /// The memorable dates and events for the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub anniversaries: Option<HashMap<String, Anniversary>>,
-    /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub addresses: Option<HashMap<String, Address>>,
-    /// The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub crypto_keys: Option<HashMap<String, CryptoKey>>,
-    /// The directories containing information about the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub directories: Option<HashMap<String, Directory>>,
-    /// The links to resources that do not fit any of the other use-case-specific resource properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub links: Option<HashMap<String, Link>>,
-    /// The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub media: Option<HashMap<String, Media>>,
-    /// The set of free-text keywords, also known as tags.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub keywords: Option<HashMap<String, bool>>,
-    /// The free-text notes that are associated with the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub notes: Option<HashMap<String, Note>>,
-    /// The personal information of the entity represented by the Card.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub personal_info: Option<HashMap<String, PersonalInfo>>,
-}
-
-impl Card {
-    /// Creates a new Card object with the specified version and unique identifier.
-    pub fn new(version: CardVersion, uid: &str) -> Self {
-        Self {
-            #[cfg(feature = "typed")]
-            card_type: "Card".to_string(),
-            version,
-            uid: uid.to_string(),
-            created: None,
-            kind: None,
-            language: None,
-            members: None,
-            prod_id: None,
-            related_to: None,
-            updated: None,
-            name: None,
-            nicknames: None,
-            organizations: None,
-            speak_to_as: None,
-            titles: None,
-            emails: None,
-            online_services: None,
-            phones: None,
-            preferred_languages: None,
-            calendars: None,
-            scheduling_addresses: None,
-            localizations: None,
-            anniversaries: None,
-            addresses: None,
-            crypto_keys: None,
-            directories: None,
-            links: None,
-            media: None,
-            keywords: None,
-            notes: None,
-            personal_info: None,
-        }
-    }
-
-    /// Creates a new Card object with the latest version and the specified unique identifier.
-    pub fn new_with_latest_version(uid: &str) -> Self {
-        Self {
-            #[cfg(feature = "typed")]
-            card_type: "Card".to_string(),
-            uid: uid.to_string(),
-            ..Card::new(CardVersion::OneDotZero, uid)
-        }
-    }
-}
-
 /// Represents the card version.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum CardVersion {
     /// version 1.0
     #[serde(rename = "1.0")]
@@ -202,7 +61,7 @@ pub enum CardVersion {
 }
 
 /// @Resource The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Calendar {
     /// The @type property value MUST be "Calendar", if set.
@@ -231,7 +90,7 @@ pub struct Calendar {
 
 /// Calendar @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum CalendarType {
     /// Calendar @type
     Calendar,
@@ -250,7 +109,7 @@ impl Calendar {
 }
 
 /// Calendar kind
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum CalendarKind {
     /// The resource is a calendar that contains entries such as calendar events or tasks.
@@ -270,7 +129,7 @@ impl From<String> for CalendarKind {
 }
 
 /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SchedulingAddress {
     /// The JSContact type of the object. The value MUST be "SchedulingAddress", if set.
@@ -293,7 +152,7 @@ pub struct SchedulingAddress {
 
 /// SchedulingAddress @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum SchedulingAddressType {
     /// SchedulingAddress @type
     SchedulingAddress,
@@ -314,7 +173,7 @@ impl SchedulingAddress {
 }
 
 /// The kind of the entity the Card represents.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum CardKind {
     /// a software application
@@ -346,7 +205,7 @@ impl From<String> for CardKind {
 }
 
 /// @Resource The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CryptoKey {
     /// The @type property value MUST be "CryptoKey", if set.
@@ -375,7 +234,7 @@ pub struct CryptoKey {
 
 /// CryptoKey @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum CryptoKeyType {
     /// CryptoKey @type
     CryptoKey,
@@ -394,7 +253,7 @@ impl CryptoKey {
 }
 
 /// @Resource The directories containing information about the entity represented by the Card.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Directory {
     /// The @type property value MUST be "Directory", if set.
@@ -426,7 +285,7 @@ pub struct Directory {
 
 /// Directory @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum DirectoryType {
     /// Directory @type
     Directory,
@@ -445,7 +304,7 @@ impl Directory {
 }
 
 /// Directory kind
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum DirectoryKind {
     ///  the resource is a directory service that the entity represented by the Card is a part of. This typically is an organizational directory that also contains associated entities, e.g., co-workers and management in a company directory.
@@ -464,84 +323,8 @@ impl From<String> for DirectoryKind {
     }
 }
 
-/// Represents a translation of a property value into a specific language.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
-#[serde(untagged)]
-pub enum LocalizationObject {
-    /// The value of the translation.
-    String(String),
-    /// Replacement of the Nickname
-    NickNameReplacement(HashMap<String, Nickname>),
-    /// Replacement of the organizations
-    OrganizationReplacement(HashMap<String, Organization>),
-    /// Replacement of the titles
-    TitleReplacement(HashMap<String, Title>),
-    /// Replacement of the emails
-    EmailReplacement(HashMap<String, EmailAddress>),
-    /// Replacement of the online services
-    OnlineServiceReplacement(HashMap<String, OnlineService>),
-    /// Replacement of the phones
-    PhoneReplacement(HashMap<String, Phone>),
-    /// Replacement of the preferred languages
-    LanguagePrefReplacement(HashMap<String, LanguagePref>),
-    /// Replacement of the calendars
-    CalendarReplacement(HashMap<String, Calendar>),
-    /// Replacement of the scheduling addresses
-    SchedulingAddressReplacement(HashMap<String, SchedulingAddress>),
-    /// Replacement of the anniversaries
-    AnniversaryReplacement(HashMap<String, Anniversary>),
-    /// Replacement the full addresses
-    AddressReplacement(HashMap<String, Address>),
-    /// Replacement of the crypto keys
-    CryptoKeyReplacement(HashMap<String, CryptoKey>),
-    /// Replacement of the directories
-    DirectoryReplacement(HashMap<String, Directory>),
-    /// Replacement of the media
-    MediaReplacement(HashMap<String, Media>),
-    /// Replacement of the notes
-    NoteReplacement(HashMap<String, Note>),
-    /// Replacement of the personal info
-    PersonalInfoReplacement(HashMap<String, PersonalInfo>),
-    /// Name
-    Name(Name),
-    /// Nickname
-    Nickname(Nickname),
-    /// Address
-    Address(Address),
-    /// Organization
-    Organization(Organization),
-    /// Title
-    Title(Title),
-    /// EmailAddress
-    EmailAddress(EmailAddress),
-    /// OnlineService
-    OnlineService(OnlineService),
-    /// Phone
-    Phone(Phone),
-    /// PreferredLanguages
-    LanguagePref(LanguagePref),
-    /// Calendar
-    Calendar(Calendar),
-    /// SchedulingAddress
-    SchedulingAddress(SchedulingAddress),
-    /// Anniversary
-    Anniversary(Anniversary),
-    /// CryptoKey
-    CryptoKey(CryptoKey),
-    /// Directory
-    Directory(Directory),
-    /// Link
-    Link(Link),
-    /// Media
-    Media(Media),
-    /// Note
-    Note(Note),
-    /// PersonalInfo
-    PersonalInfo(PersonalInfo),
-}
-
 /// @Resource The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
     /// The @type property value MUST be "Media", if set.
@@ -569,7 +352,7 @@ pub struct Media {
 
 /// Media @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum MediaType {
     /// Media @type
     Media,
@@ -590,7 +373,7 @@ impl Media {
 }
 
 /// Media kind
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum MediaKind {
     #[default]
@@ -614,7 +397,7 @@ impl From<String> for MediaKind {
 }
 
 /// @Resource The links to resources that do not fit any of the other use-case-specific resource properties.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Link {
     /// The @type property value MUST be "Link", if set.
@@ -643,7 +426,7 @@ pub struct Link {
 
 /// Link @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum LinkType {
     /// Link @type
     Link,
@@ -662,7 +445,7 @@ impl Link {
 }
 
 /// Link kind
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum LinkKind {
     /// a contact link
@@ -679,7 +462,7 @@ impl From<String> for LinkKind {
 }
 
 /// Represents the Relation object for associating related Cards.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Relation {
     /// The JSContact type of the object. Must be "Relation".
@@ -693,7 +476,7 @@ pub struct Relation {
 }
 
 /// the IANA-registered TYPE [IANA-vCard] parameter values of the vCard RELATED property (Section 6.6.6 of [RFC6350]):
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum RelationshipType {
     /// acquaintance
@@ -742,14 +525,14 @@ pub enum RelationshipType {
 
 /// Relation @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum RelationType {
     /// Relation @type
     Relation,
 }
 
 /// Defines the Name object, which contains information about the entity's name components.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Name {
     /// The JSContact type of the object. The value MUST be "Name", if set.
@@ -781,7 +564,7 @@ pub struct Name {
 }
 
 /// The phonetic system used in the related value of the phonetic property.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum PhoneticSystem {
     /// International Phonetic Alphabet
@@ -810,14 +593,14 @@ impl Default for Name {
 
 /// Name @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum NameType {
     /// Name @type
     Name,
 }
 
 /// Represents individual components of a name, such as given name or surname.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NameComponent {
     /// The JSContact type of the object. Must be "NameComponent".
@@ -849,14 +632,14 @@ impl NameComponent {
 
 /// NameComponent @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum NameComponentType {
     /// NameComponent @type
     NameComponent,
 }
 
 /// The kind of the name component.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum NameComponentKind {
     ///  a credential, also known as "accreditation qualifier" or "honorific suffix", e.g., "B.A.", "Esq.".
@@ -895,7 +678,7 @@ impl From<String> for NameComponentKind {
 }
 
 /// Defines the Nickname object, which includes nicknames for the entity.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Nickname {
     /// The JSContact type of the object. Must be "Nickname".
@@ -915,14 +698,14 @@ pub struct Nickname {
 
 /// Nickname @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum NicknameType {
     /// Nickname @type
     Nickname,
 }
 
 /// Represents an Organization object containing company or organization information.
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Organization {
     /// The JSContact type of the object. Must be "Organization".
@@ -946,14 +729,14 @@ pub struct Organization {
 
 /// Organization @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum OrganizationType {
     /// Organization @type
     Organization,
 }
 
 /// Represents a unit within an organization, such as a department.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct OrgUnit {
     /// The JSContact type of the object. Must be "OrgUnit".
@@ -970,7 +753,7 @@ pub struct OrgUnit {
 
 /// OrgUnit @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum OrgUnitType {
     /// OrgUnit @type
     OrgUnit,
@@ -989,7 +772,7 @@ impl OrgUnit {
 }
 
 /// Represents how to address or refer to the entity, including grammatical gender and pronouns.
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SpeakToAs {
     /// The JSContact type of the object. Must be "SpeakToAs".
@@ -1007,7 +790,7 @@ pub struct SpeakToAs {
 
 /// The grammatical gender to use in salutations and other grammatical constructs.
 /// For example, the German language distinguishes by grammatical gender in salutations such as "Sehr geehrte" (feminine) and "Sehr geehrter" (masculine).
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum GrammaticalGender {
     /// animate
@@ -1026,14 +809,14 @@ pub enum GrammaticalGender {
 
 /// SpeakToAs @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum SpeakToAsType {
     /// SpeakToAs @type
     SpeakToAs,
 }
 
 /// Defines pronouns used for the entity, such as they/them.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Pronouns {
     /// The JSContact type of the object. Must be "Pronouns".
@@ -1053,7 +836,7 @@ pub struct Pronouns {
 
 /// Pronouns @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum PronounsType {
     /// Pronouns @type
     Pronouns,
@@ -1073,7 +856,7 @@ impl Pronouns {
 }
 
 /// Represents titles or roles of the entity, such as job titles or functional positions.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Title {
     /// The JSContact type of the object. Must be "Title".
@@ -1093,7 +876,7 @@ pub struct Title {
 
 /// Title @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum TitleType {
     /// Title @type
     Title,
@@ -1113,7 +896,7 @@ impl Title {
 }
 
 /// Title kind
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum TitleKind {
     /// a role
@@ -1133,7 +916,7 @@ impl From<String> for TitleKind {
 }
 
 /// Defines email addresses associated with the entity.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct EmailAddress {
     /// The JSContact type of the object. Must be "EmailAddress".
@@ -1156,7 +939,7 @@ pub struct EmailAddress {
 
 /// EmailAddress @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum EmailAddressType {
     /// EmailAddress @type
     EmailAddress,
@@ -1177,7 +960,7 @@ impl EmailAddress {
 }
 
 /// Represents online services such as social media or messaging accounts.
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct OnlineService {
     /// The JSContact type of the object. Must be "OnlineService".
@@ -1207,14 +990,14 @@ pub struct OnlineService {
 
 /// OnlineService @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum OnlineServiceType {
     /// OnlineService @type
     OnlineService,
 }
 
 /// Defines phone numbers for the entity, including features like voice or text.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Phone {
     /// The JSContact type of the object. Must be "Phone".
@@ -1239,7 +1022,7 @@ pub struct Phone {
 }
 
 /// The set of contact features that the phone number may be used for.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum PhoneFeature {
     /// this number supports sending faxes.
@@ -1263,7 +1046,7 @@ pub enum PhoneFeature {
 
 /// The contexts in which to use the contact information.
 /// For example, someone might have distinct phone numbers for work and private contexts and may set the desired context on the respective phone number in the phones property.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Context {
     /// the contact information that may be used in a private context.
@@ -1274,7 +1057,7 @@ pub enum Context {
 
 /// Phone @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum PhoneType {
     /// Phone @type
     Phone,
@@ -1296,7 +1079,7 @@ impl Phone {
 }
 
 /// Represents preferred languages for communication.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct LanguagePref {
     /// The JSContact type of the object. Must be "LanguagePref".
@@ -1316,7 +1099,7 @@ pub struct LanguagePref {
 
 /// LanguagePref @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum LanguagePrefType {
     /// LanguagePref @type
     LanguagePref,
@@ -1336,7 +1119,7 @@ impl LanguagePref {
 }
 
 /// Represents memorable dates and events for the entity.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Anniversary {
     /// The JSContact type of the object. Must be "Anniversary".
@@ -1357,7 +1140,7 @@ pub struct Anniversary {
 }
 
 /// The kind of anniversary
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum AnniversaryKind {
     /// a birthday anniversary
@@ -1381,7 +1164,7 @@ impl From<String> for AnniversaryKind {
 
 /// Anniversary @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum AnniversaryType {
     /// Anniversary @type
     Anniversary,
@@ -1402,7 +1185,7 @@ impl Anniversary {
 }
 
 /// Represents a date object, which can be a timestamp or a partial date.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(untagged)]
 pub enum DateObject {
     // Check first if the date is a timestamp because timestamp has a field
@@ -1413,7 +1196,7 @@ pub enum DateObject {
 }
 
 /// Timestamp
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Timestamp {
     /// The JSContact type of the object. The value MUST be "Timestamp", if set.
@@ -1428,7 +1211,7 @@ pub struct Timestamp {
 
 /// Timestamp @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum TimestampType {
     /// Timestamp @type
     Timestamp,
@@ -1446,7 +1229,7 @@ impl Timestamp {
 }
 
 /// A PartialDate object represents a complete or partial calendar date in the Gregorian calendar.  It represents a complete date, a year, a month in a year, or a day in a month.
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PartialDate {
     /// The JSContact type of the object. The value MUST be "PartialDate", if set.
@@ -1473,14 +1256,14 @@ pub struct PartialDate {
 
 /// PartialDate @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum PartialDateType {
     /// PartialDate @type
     PartialDate,
 }
 
 /// The addresses of the entity represented by the Card, such as postal addresses or geographic locations.
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Address {
     /// The JSContact type of the object. The value MUST be "Address", if set.
@@ -1524,7 +1307,7 @@ pub struct Address {
 }
 
 /// The contexts in which to use this address.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum AddressContext {
     /// an address to be used for billing.
@@ -1539,14 +1322,14 @@ pub enum AddressContext {
 
 /// Address @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum AddressType {
     /// Address @type
     Address,
 }
 
 /// The components that make up the address.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AddressComponent {
     /// The JSContact type of the object. The value MUST be "AddressComponent", if set.
@@ -1565,7 +1348,7 @@ pub struct AddressComponent {
 
 /// AddressComponent @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum AddressComponentType {
     /// AddressComponent @type
     AddressComponent,
@@ -1585,7 +1368,7 @@ impl AddressComponent {
 }
 
 /// The kind of the address component.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum AddressComponentKind {
     /// the extension designation such as the apartment number, unit, or box number.
@@ -1651,7 +1434,7 @@ impl From<String> for AddressComponentKind {
 }
 
 /// The free-text notes that are associated with the Card.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Note {
     /// The JSContact type of the object. The value MUST be "Note", if set.
@@ -1671,14 +1454,14 @@ pub struct Note {
 
 /// Note @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum NoteType {
     /// Note @type
     Note,
 }
 
 /// The author of a note.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Author {
     /// The JSContact type of the object. The value MUST be "Author", if set.
@@ -1696,14 +1479,14 @@ pub struct Author {
 
 /// Author @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum AuthorType {
     /// Author @type
     Author,
 }
 
 /// The personal information of the entity represented by the Card.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PersonalInfo {
     ///The JSContact type of the object.  The value MUST be "PersonalInfo", if set.
@@ -1727,7 +1510,7 @@ pub struct PersonalInfo {
 }
 
 /// The kind of personal information.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum PersonalInfoKind {
     /// a field of expertise or a credential
@@ -1751,7 +1534,7 @@ impl From<String> for PersonalInfoKind {
 
 /// PersonalInfo @type
 #[cfg(feature = "typed")]
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 enum PersonalInfoType {
     /// PersonalInfo @type
     PersonalInfo,
@@ -1773,7 +1556,7 @@ impl PersonalInfo {
 }
 
 /// The level of expertise or engagement in hobby or interest.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum PersonalInfoLevel {
     /// High level of expertise or engagement.

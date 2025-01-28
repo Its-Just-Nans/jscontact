@@ -1,0 +1,13 @@
+{
+  "name": {
+    "full": "Jane"
+  },
+  "localizations": {
+    "de": {
+      "name/extra": "reserved"
+    }
+  },
+  "@type": "Card",
+  "uid": "e172ac33-a8ff-46a8-8e42-22f00947dafd",
+  "version": "1.0"
+}

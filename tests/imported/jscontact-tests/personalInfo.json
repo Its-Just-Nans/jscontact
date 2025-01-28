@@ -1,0 +1,22 @@
+{
+  "personalInfo": {
+    "pi2": {
+      "kind": "expertise",
+      "value": "chemistry",
+      "level": "high"
+    },
+    "pi1": {
+      "kind": "hobby",
+      "value": "reading",
+      "level": "high"
+    },
+    "pi6": {
+      "kind": "interest",
+      "value": "r&b music",
+      "level": "medium"
+    }
+  },
+  "@type": "Card",
+  "uid": "6ac2f716-0f40-4a0c-9523-0c2f5133004b",
+  "version": "1.0"
+}

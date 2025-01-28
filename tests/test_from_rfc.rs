@@ -2,9 +2,9 @@ mod test {
 
     use jscontact::{
         AddressComponentKind, AnniversaryKind, CalendarKind, Card, CardKind, CardVersion, Context,
-        DateObject, DirectoryKind, GrammaticalGender, LinkKind, LocalizationObject, MediaKind,
-        NameComponentKind, PersonalInfoKind, PersonalInfoLevel, PhoneFeature, PhoneticSystem,
-        RelationshipType, TitleKind,
+        DateObject, DirectoryKind, GrammaticalGender, LinkKind, MediaKind, NameComponentKind,
+        PersonalInfoKind, PersonalInfoLevel, PhoneFeature, PhoneticSystem, RelationshipType,
+        TitleKind,
     };
 
     #[test]
@@ -202,6 +202,7 @@ mod test {
 
         let card: Card = serde_json::from_slice(json).unwrap();
         assert_eq!(card.language, Some("zh-Hant".to_string()));
+        let localized_card = card.get_localized("yue").unwrap();
         let name = card.name.unwrap();
         let components = name.components.unwrap();
         assert_eq!(components.len(), 4);
@@ -213,32 +214,19 @@ mod test {
         assert_eq!(components[2].value, "文");
         assert_eq!(components[3].kind, NameComponentKind::Given2);
         assert_eq!(components[3].value, "逸仙");
-        let localizations = card.localizations.unwrap();
-        let yue = localizations.get("yue").unwrap();
-        assert_eq!(
-            yue.get("name/phoneticSystem"),
-            Some(&LocalizationObject::String("jyut".to_string()))
-        );
-        assert_eq!(
-            yue.get("name/phoneticScript"),
-            Some(&LocalizationObject::String("Latn".to_string()))
-        );
-        assert_eq!(
-            yue.get("name/components/0/phonetic"),
-            Some(&LocalizationObject::String("syun1".to_string()))
-        );
-        assert_eq!(
-            yue.get("name/components/1/phonetic"),
-            Some(&LocalizationObject::String("zung1saan1".to_string()))
-        );
-        assert_eq!(
-            yue.get("name/components/2/phonetic"),
-            Some(&LocalizationObject::String("man4".to_string()))
-        );
-        assert_eq!(
-            yue.get("name/components/3/phonetic"),
-            Some(&LocalizationObject::String("jat6sin1".to_string()))
-        );
+        let name = localized_card.name.as_ref().unwrap();
+        assert_eq!(name.phonetic_system, Some(PhoneticSystem::Jyut));
+        assert_eq!(name.phonetic_script, Some("Latn".to_string()));
+        let components = name.components.as_ref().unwrap();
+        assert_eq!(components.len(), 4);
+        assert_eq!(components[0].kind, NameComponentKind::Surname);
+        assert_eq!(components[0].phonetic, Some("syun1".to_string()));
+        assert_eq!(components[1].kind, NameComponentKind::Given);
+        assert_eq!(components[1].phonetic, Some("zung1saan1".to_string()));
+        assert_eq!(components[2].kind, NameComponentKind::Given2);
+        assert_eq!(components[2].phonetic, Some("man4".to_string()));
+        assert_eq!(components[3].kind, NameComponentKind::Given2);
+        assert_eq!(components[3].phonetic, Some("jat6sin1".to_string()));
     }
 
     #[test]
@@ -476,6 +464,7 @@ mod test {
         let json = include_bytes!("./rfc9553/figure_33.json");
 
         let card: Card = serde_json::from_slice(json).unwrap();
+        let localized = card.get_localized("jp").unwrap();
         let addresses = card.addresses.unwrap();
         assert_eq!(addresses.len(), 1);
         let k26 = addresses.get("k26").unwrap();
@@ -501,12 +490,9 @@ mod test {
         assert_eq!(components[8].value, "100-8994");
         assert_eq!(k26.default_separator, Some(", ".to_string()));
         assert_eq!(k26.is_ordered, Some(true));
-        let localizations = card.localizations.unwrap();
-        let jp = localizations.get("jp").unwrap();
-        let address = match jp.get("addresses/k26") {
-            Some(LocalizationObject::Address(address)) => address,
-            e => panic!("{}", format!("Invalid type: {:?}", e)),
-        };
+        let address = localized.addresses.unwrap();
+        assert_eq!(address.len(), 1);
+        let address = address.get("k26").unwrap();
         let components_jp = address.components.as_ref().unwrap();
         assert_eq!(components_jp.len(), 7);
         assert_eq!(components_jp[0].kind, AddressComponentKind::Region);
@@ -616,6 +602,7 @@ mod test {
     fn test_figure_39() {
         let json = include_bytes!("./rfc9553/figure_39.json");
         let name: Card = serde_json::from_slice(json).unwrap();
+        let localized_card = name.get_localized("uk-Cyrl").unwrap();
         let components = name.name.unwrap().components.unwrap();
         assert_eq!(components.len(), 4);
         assert_eq!(components[0].kind, NameComponentKind::Title);
@@ -626,12 +613,7 @@ mod test {
         assert_eq!(components[2].value, "Petrovich");
         assert_eq!(components[3].kind, NameComponentKind::Surname);
         assert_eq!(components[3].value, "Vasiliev");
-        let localizations = name.localizations.unwrap();
-        let uk_cyrl = localizations.get("uk-Cyrl").unwrap();
-        let name = match uk_cyrl.get("name") {
-            Some(LocalizationObject::Name(name)) => name,
-            e => panic!("{}", format!("Invalid type {:?}", e)),
-        };
+        let name = localized_card.name.as_ref().unwrap();
         let components_uk_cyrl = name.components.as_ref().unwrap();
         assert_eq!(components_uk_cyrl.len(), 4);
         assert_eq!(components_uk_cyrl[0].kind, NameComponentKind::Title);
@@ -648,6 +630,7 @@ mod test {
     fn test_figure_40() {
         let json = include_bytes!("./rfc9553/figure_40.json");
         let card: Card = serde_json::from_slice(json).unwrap();
+        let localized = card.get_localized("es").unwrap();
         let name = card.name.unwrap();
         assert_eq!(name.full, Some("Gabriel García Márquez".to_string()));
         let titles = card.titles.unwrap();
@@ -655,13 +638,12 @@ mod test {
         let t1 = titles.get("t1").unwrap();
         assert_eq!(t1.kind, Some(TitleKind::Title));
         assert_eq!(t1.name, "novelist");
-        let localizations = card.localizations.unwrap();
-        let es = localizations.get("es").unwrap();
-        let title = match es.get("titles/t1/name") {
-            Some(LocalizationObject::String(patch)) => patch,
+        let es = localized.titles.as_ref().unwrap();
+        let t1 = match es.get("t1") {
+            Some(patch) => patch,
             e => panic!("{}", format!("Invalid type {:?}", e)),
         };
-        assert_eq!(title, &"escritor".to_string());
+        assert_eq!(t1.name, "escritor".to_string());
     }
 
     #[test]

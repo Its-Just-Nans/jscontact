@@ -1,0 +1,16 @@
+{
+  "directories": {
+    "dir1": {
+      "kind": "entry",
+      "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf"
+    },
+    "dir2": {
+      "kind": "directory",
+      "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+      "pref": 1
+    }
+  },
+  "@type": "Card",
+  "uid": "96af6311-f9be-4c34-9855-9eeec87f8920",
+  "version": "1.0"
+}

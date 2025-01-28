@@ -1,0 +1,10 @@
+{
+  "schedulingAddresses": {
+    "sched1": {
+      "uri": "mailto:janedoe@example.com"
+    }
+  },
+  "@type": "Card",
+  "uid": "17038a96-b83f-4453-9b19-d28f906e7472",
+  "version": "1.0"
+}

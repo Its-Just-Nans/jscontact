@@ -651,7 +651,7 @@ fn localize_notes(card: &mut Card, key: &str, value: &Value) -> Result<(), Strin
     Ok(())
 }
 
-/// Localize the Keywords
+/// Localize the [`crate::Keywords`]
 fn localize_keywords(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "keywords" {
         card.keywords = serde_json::from_value(value.clone()).ok();

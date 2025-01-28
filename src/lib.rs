@@ -60,7 +60,7 @@ pub enum CardVersion {
     OneDotZero,
 }
 
-/// @Resource The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
+/// [`crate::Resource`] The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Calendar {
@@ -204,7 +204,7 @@ impl From<String> for CardKind {
     }
 }
 
-/// @Resource The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
+/// [`crate::Resource`] The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CryptoKey {
@@ -252,7 +252,7 @@ impl CryptoKey {
     }
 }
 
-/// @Resource The directories containing information about the entity represented by the Card.
+/// [`crate::Resource`] The directories containing information about the entity represented by the Card.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Directory {
@@ -323,7 +323,7 @@ impl From<String> for DirectoryKind {
     }
 }
 
-/// @Resource The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
+/// [`crate::Resource`] The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
@@ -396,7 +396,7 @@ impl From<String> for MediaKind {
     }
 }
 
-/// @Resource The links to resources that do not fit any of the other use-case-specific resource properties.
+/// [`crate::Resource`] The links to resources that do not fit any of the other use-case-specific resource properties.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Link {

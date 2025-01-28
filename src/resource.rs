@@ -1,4 +1,4 @@
-//! The Resource data type defines a resource associated with the entity represented by the Card, identified by a URI RFC3986.
+//! The Resource data type defines a resource associated with the entity represented by the [`crate::Card`]`, identified by a URI RFC3986.
 //! Later in this document, several property definitions refer to the Resource type as the basis for their property-specific value types.
 //! The Resource type defines the properties that are common to all of them.
 //! Property definitions making use of Resource MAY define additional properties for their value types.

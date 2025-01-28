@@ -419,6 +419,38 @@ impl From<String> for DirectoryKind {
 pub enum LocalizationObject {
     /// The value of the translation.
     String(String),
+    /// Replacement of the Nickname
+    NickNameReplacement(HashMap<String, Nickname>),
+    /// Replacement of the organizations
+    OrganizationReplacement(HashMap<String, Organization>),
+    /// Replacement of the titles
+    TitleReplacement(HashMap<String, Title>),
+    /// Replacement of the emails
+    EmailReplacement(HashMap<String, EmailAddress>),
+    /// Replacement of the online services
+    OnlineServiceReplacement(HashMap<String, OnlineService>),
+    /// Replacement of the phones
+    PhoneReplacement(HashMap<String, Phone>),
+    /// Replacement of the preferred languages
+    LanguagePrefReplacement(HashMap<String, LanguagePref>),
+    /// Replacement of the calendars
+    CalendarReplacement(HashMap<String, Calendar>),
+    /// Replacement of the scheduling addresses
+    SchedulingAddressReplacement(HashMap<String, SchedulingAddress>),
+    /// Replacement of the anniversaries
+    AnniversaryReplacement(HashMap<String, Anniversary>),
+    /// Replacement the full addresses
+    AddressReplacement(HashMap<String, Address>),
+    /// Replacement of the crypto keys
+    CryptoKeyReplacement(HashMap<String, CryptoKey>),
+    /// Replacement of the directories
+    DirectoryReplacement(HashMap<String, Directory>),
+    /// Replacement of the media
+    MediaReplacement(HashMap<String, Media>),
+    /// Replacement of the notes
+    NoteReplacement(HashMap<String, Note>),
+    /// Replacement of the personal info
+    PersonalInfoReplacement(HashMap<String, PersonalInfo>),
     /// Name
     Name(Name),
     /// Nickname

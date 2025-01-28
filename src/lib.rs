@@ -72,7 +72,7 @@ pub struct Calendar {
     /// The kind of the calendar.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<CalendarKind>,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The resource value.
@@ -215,7 +215,7 @@ pub struct CryptoKey {
     crypto_key_type: Option<CryptoKeyType>,
     /// The resource value.
     pub uri: String,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The kind of the resource.
@@ -266,7 +266,7 @@ pub struct Directory {
     pub kind: Option<DirectoryKind>,
     /// The resource value.
     pub uri: String,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
@@ -336,7 +336,7 @@ pub struct Media {
     pub kind: MediaKind,
     /// The resource value.
     pub uri: String,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
@@ -360,7 +360,7 @@ enum MediaType {
 
 impl Media {
     /// Creates a new Media object with the specified URI and kind.
-    /// Kind is mandatory on [`crate:Media`] struct
+    /// Kind is mandatory on [`crate::Media`] struct
     pub fn new(uri: &str, kind: MediaKind) -> Self {
         Self {
             #[cfg(feature = "typed")]
@@ -410,7 +410,7 @@ pub struct Link {
     pub kind: Option<LinkKind>,
     /// The resource value.
     pub uri: String,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
@@ -475,7 +475,7 @@ pub struct Relation {
     pub relation: Option<HashMap<RelationshipType, bool>>,
 }
 
-/// the IANA-registered TYPE [IANA-vCard] parameter values of the vCard RELATED property (Section 6.6.6 of [RFC6350]):
+/// the IANA-registered TYPE [IANA-vCard] parameter values of the vCard RELATED property (Section 6.6.6 of RFC6350):
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum RelationshipType {
@@ -1247,7 +1247,7 @@ pub struct PartialDate {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub day: Option<u32>,
 
-    /// The calendar system in which this date occurs, in lowercase.  This MUST be either a calendar system name registered as a Common Locale Data Repository (CLDR) [RFC7529] or a vendor-specific value.
+    /// The calendar system in which this date occurs, in lowercase.  This MUST be either a calendar system name registered as a Common Locale Data Repository (CLDR) RFC7529 or a vendor-specific value.
     /// The year, month, and day still MUST be represented in the Gregorian calendar.
     /// Note that the year property might be required to convert the date between the Gregorian calendar and the respective calendar system.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1280,7 +1280,7 @@ pub struct Address {
     /// The Alpha-2 country code [ISO.3166-1].
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
-    /// A "geo:" URI [RFC5870] for the address.
+    /// A "geo:" URI RFC5870 for the address.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub coordinates: Option<String>,
     /// The time zone in which the address is located. This MUST be a time zone name registered in the IANA Time Zone Database [IANA-TZ].

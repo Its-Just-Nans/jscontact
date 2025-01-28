@@ -16,32 +16,42 @@ use crate::{
 #[serde(rename_all = "camelCase")]
 pub struct Card {
     /// The JSContact type of the Card object. Must be "Card".
+    /// Not localized.
     #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
     card_type: String,
     /// The JSContact version of this Card.
+    /// Not localized.
     pub version: CardVersion,
     /// The date and time when the Card was created.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub created: Option<String>,
     /// A unique identifier for the Card.
+    /// Not localized.
     pub uid: String,
     /// The kind of entity the Card represents (e.g., individual, group).
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<CardKind>,
     /// The language used in the Card (e.g., en, fr).
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub language: Option<String>,
     /// Members of a group Card, if applicable.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub members: Option<HashMap<String, bool>>,
     /// Identifier for the product that created the Card.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub prod_id: Option<String>,
     /// Related Cards with their relationship types.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub related_to: Option<HashMap<String, Relation>>,
     /// The last modification time of the Card.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub updated: Option<String>,
     /// The name of the entity represented by the Card.
@@ -53,9 +63,11 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nicknames: Option<HashMap<String, Nickname>>,
     /// Organizations associated with the entity.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub organizations: Option<HashMap<String, Organization>>,
     /// How to address or refer to the entity.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub speak_to_as: Option<SpeakToAs>,
     /// Job titles or roles of the entity.
@@ -63,24 +75,31 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub titles: Option<HashMap<String, Title>>,
     /// Email addresses for contacting the entity.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub emails: Option<HashMap<String, EmailAddress>>,
     /// Online services or social media associated with the entity.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub online_services: Option<HashMap<String, OnlineService>>,
     /// Phone numbers for contacting the entity.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub phones: Option<HashMap<String, Phone>>,
     /// Preferred languages for communication.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_languages: Option<HashMap<String, LanguagePref>>,
     /// The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub calendars: Option<HashMap<String, Calendar>>,
     /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduling_addresses: Option<HashMap<String, SchedulingAddress>>,
     /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     localizations: Option<HashMap<String, HashMap<String, Value>>>,
     /// The memorable dates and events for the entity represented by the Card.
@@ -92,21 +111,27 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub addresses: Option<HashMap<String, Address>>,
     /// The cryptographic resources such as public keys and certificates associated with the entity represented by the Card.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub crypto_keys: Option<HashMap<String, CryptoKey>>,
     /// The directories containing information about the entity represented by the Card.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub directories: Option<HashMap<String, Directory>>,
     /// The links to resources that do not fit any of the other use-case-specific resource properties.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub links: Option<HashMap<String, Link>>,
     /// The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
+    /// Not localized.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media: Option<HashMap<String, Media>>,
     /// The set of free-text keywords, also known as tags.
+    /// Localized by [`localize_keywords`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub keywords: Option<HashMap<String, bool>>,
     /// The free-text notes that are associated with the Card.
+    /// Localized by [`localize_notes`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<HashMap<String, Note>>,
     /// The personal information of the entity represented by the Card.
@@ -199,6 +224,11 @@ impl Card {
         }
     }
 
+    /// Get the Raw Localizations
+    pub fn get_raw_localizations(&self) -> Option<&HashMap<String, HashMap<String, Value>>> {
+        self.localizations.as_ref()
+    }
+
     /// Adds a localization to the Card object.
     pub fn add_localization(&mut self, language: &str, value: HashMap<String, Value>) {
         match &mut self.localizations {
@@ -247,6 +277,10 @@ impl Card {
                 localize_nicknames(&mut card, key, value)?;
             } else if key.starts_with("personalInfo") {
                 localize_personal_info(&mut card, key, value)?;
+            } else if key.starts_with("notes") {
+                localize_notes(&mut card, key, value)?;
+            } else if key.starts_with("keywords") {
+                localize_keywords(&mut card, key, value)?;
             }
         }
         Ok(card)
@@ -561,6 +595,70 @@ fn localize_personal_info(card: &mut Card, key: &str, value: &Value) -> Result<(
         personal_info.kind = kind;
     }
     card.personal_info = Some(personal_infos.clone());
+    Ok(())
+}
+
+/// Localize the Notes
+fn localize_notes(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "notes" {
+        card.notes = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let notes = match &mut card.notes {
+        Some(notes) => notes,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("notes", "");
+    if key.is_empty() {
+        let Ok(notes_map) = serde_json::from_value::<HashMap<String, Note>>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        *notes = notes_map;
+        card.notes = Some(notes.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid notes key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(note) = serde_json::from_value::<Note>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        notes.insert(idx_key, note);
+        card.notes = Some(notes.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(note) = notes.get_mut(&idx_key) else {
+        return Err(format!("notes key '{}' not found", idx_key));
+    };
+    if key == "note" {
+        let Ok(str) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        note.note = str;
+    } else if key == "created" {
+        note.created = serde_json::from_value(value.clone()).ok();
+    } else if key == "author" {
+        let Ok(author) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        note.author = author;
+    }
+    card.notes = Some(notes.clone());
+    Ok(())
+}
+
+/// Localize the Keywords
+fn localize_keywords(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "keywords" {
+        card.keywords = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
     Ok(())
 }
 

@@ -1080,4 +1080,133 @@ mod test {
 
         Ok(())
     }
+
+    #[test]
+    fn test_localizations_notes() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "notes": {
+                "n1": {
+                    "note": "This is a note."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "notes": {
+                        "n1": {
+                            "note": "This is a note in English."
+                        }
+                    }
+                }
+            }
+        });
+        let card: Card = serde_json::from_value(json).unwrap();
+        std::fs::write(
+            "tests/localizations/test_localizations_notes.json",
+            serde_json::to_string_pretty(&card)?,
+        )?;
+
+        let localizations = card.get_localized("en")?;
+        let notes = localizations.notes.unwrap();
+        let n1 = notes.get("n1").unwrap();
+        assert_eq!(n1.note, "This is a note in English.");
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_notes_path_object_1() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "notes": {
+                "n1": {
+                    "note": "This is a note."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "notes/n1": {
+                        "note": "This is a note in English."
+                    }
+                }
+            }
+        });
+        let card: Card = serde_json::from_value(json).unwrap();
+        std::fs::write(
+            "tests/localizations/test_localizations_notes_path_object_1.json",
+            serde_json::to_string_pretty(&card)?,
+        )?;
+
+        let localizations = card.get_localized("en")?;
+        let notes = localizations.notes.unwrap();
+        let n1 = notes.get("n1").unwrap();
+        assert_eq!(n1.note, "This is a note in English.");
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_notes_path_object_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "notes": {
+                "n1": {
+                    "note": "This is a note."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "notes/n1/note": "This is a note in English."
+                }
+            }
+        });
+        let card: Card = serde_json::from_value(json).unwrap();
+        std::fs::write(
+            "tests/localizations/test_localizations_notes_path_object_2.json",
+            serde_json::to_string_pretty(&card)?,
+        )?;
+
+        let localizations = card.get_localized("en")?;
+        let notes = localizations.notes.unwrap();
+        let n1 = notes.get("n1").unwrap();
+        assert_eq!(n1.note, "This is a note in English.");
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_keywords() {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "keywords": {
+                "un_mot": true
+            },
+            "localizations": {
+                "en": {
+                    "keywords": {
+                            "a_keyword": true
+                    }
+                }
+            }
+        });
+        let card: Card = serde_json::from_value(json).unwrap();
+        std::fs::write(
+            "tests/localizations/test_localizations_keywords.json",
+            serde_json::to_string_pretty(&card).unwrap(),
+        )
+        .unwrap();
+
+        let localizations = card.get_localized("en").unwrap();
+        let keywords = localizations.keywords.unwrap();
+        let k1 = keywords.get("a_keyword").unwrap();
+        assert_eq!(k1, &true);
+    }
 }

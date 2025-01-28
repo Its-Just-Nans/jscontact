@@ -1,4 +1,4 @@
-//! The Resource data type defines a resource associated with the entity represented by the Card, identified by a URI [RFC3986].
+//! The Resource data type defines a resource associated with the entity represented by the Card, identified by a URI RFC3986.
 //! Later in this document, several property definitions refer to the Resource type as the basis for their property-specific value types.
 //! The Resource type defines the properties that are common to all of them.
 //! Property definitions making use of Resource MAY define additional properties for their value types.
@@ -28,7 +28,7 @@ pub struct Resource {
     pub kind: Option<String>,
     /// The resource value.
     pub uri: String,
-    /// The media type [RFC2046] of the resource identified by the uri property value.
+    /// The media type RFC2046 of the resource identified by the uri property value.
     pub media_type: Option<String>,
     /// The contexts in which to use this resource.
     pub contexts: Option<HashMap<Context, bool>>,

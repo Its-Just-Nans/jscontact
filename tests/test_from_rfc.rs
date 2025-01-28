@@ -3,8 +3,8 @@ mod test {
     use jscontact::{
         AddressComponentKind, AnniversaryKind, CalendarKind, Card, CardKind, CardVersion, Context,
         DateObject, DirectoryKind, GrammaticalGender, LinkKind, LocalizationObject, MediaKind,
-        NameComponentKind, PatchingObject, PersonalInfoKind, PersonalInfoLevel, PhoneFeature,
-        PhoneticSystem, RelationshipType, TitleKind,
+        NameComponentKind, PersonalInfoKind, PersonalInfoLevel, PhoneFeature, PhoneticSystem,
+        RelationshipType, TitleKind,
     };
 
     #[test]
@@ -215,33 +215,29 @@ mod test {
         assert_eq!(components[3].value, "逸仙");
         let localizations = card.localizations.unwrap();
         let yue = localizations.get("yue").unwrap();
-        let yue = match yue {
-            LocalizationObject::PatchObject(patch) => patch,
-            _ => panic!("Expected PatchObject"),
-        };
         assert_eq!(
             yue.get("name/phoneticSystem"),
-            Some(&PatchingObject::String("jyut".to_string()))
+            Some(&LocalizationObject::String("jyut".to_string()))
         );
         assert_eq!(
             yue.get("name/phoneticScript"),
-            Some(&PatchingObject::String("Latn".to_string()))
+            Some(&LocalizationObject::String("Latn".to_string()))
         );
         assert_eq!(
             yue.get("name/components/0/phonetic"),
-            Some(&PatchingObject::String("syun1".to_string()))
+            Some(&LocalizationObject::String("syun1".to_string()))
         );
         assert_eq!(
             yue.get("name/components/1/phonetic"),
-            Some(&PatchingObject::String("zung1saan1".to_string()))
+            Some(&LocalizationObject::String("zung1saan1".to_string()))
         );
         assert_eq!(
             yue.get("name/components/2/phonetic"),
-            Some(&PatchingObject::String("man4".to_string()))
+            Some(&LocalizationObject::String("man4".to_string()))
         );
         assert_eq!(
             yue.get("name/components/3/phonetic"),
-            Some(&PatchingObject::String("jat6sin1".to_string()))
+            Some(&LocalizationObject::String("jat6sin1".to_string()))
         );
     }
 
@@ -505,35 +501,13 @@ mod test {
         assert_eq!(components[8].value, "100-8994");
         assert_eq!(k26.default_separator, Some(", ".to_string()));
         assert_eq!(k26.is_ordered, Some(true));
-        //     "jp": {
-        //       "addresses/k26": {
-        //         "components": [
-        //           { "kind": "region", "value": "東京都" },
-        //           { "kind": "locality", "value": "千代田区" },
-        //           { "kind": "district", "value": "丸ノ内" },
-        //           { "kind": "block", "value": "2-7" },
-        //           { "kind": "separator", "value": "-" },
-        //           { "kind": "number", "value": "2" },
-        //           { "kind": "postcode", "value": "〒100-8994" }
-        //         ],
-        //         "defaultSeparator": "",
-        //         "full": "〒100-8994東京都千代田区丸ノ内2-7-2",
-        //         "isOrdered": true
-        //       }
-        //     }
-        //   }
         let localizations = card.localizations.unwrap();
         let jp = localizations.get("jp").unwrap();
-        let jp = match jp {
-            LocalizationObject::PatchObject(hashmap) => hashmap,
-            _ => panic!("Expected ReplacementObject"),
+        let address = match jp.get("addresses/k26") {
+            Some(LocalizationObject::Address(address)) => address,
+            e => panic!("{}", format!("Invalid type: {:?}", e)),
         };
-        let jp = jp.get("addresses/k26").unwrap();
-        let jp = match jp {
-            PatchingObject::Address(address) => address,
-            _ => panic!("Expected ReplacementObject"),
-        };
-        let components_jp = jp.components.as_ref().unwrap();
+        let components_jp = address.components.as_ref().unwrap();
         assert_eq!(components_jp.len(), 7);
         assert_eq!(components_jp[0].kind, AddressComponentKind::Region);
         assert_eq!(components_jp[0].value, "東京都");
@@ -550,10 +524,10 @@ mod test {
         assert_eq!(components_jp[6].kind, AddressComponentKind::Postcode);
         assert_eq!(components_jp[6].value, "〒100-8994");
         assert_eq!(
-            jp.full,
+            address.full,
             Some("〒100-8994東京都千代田区丸ノ内2-7-2".to_string())
         );
-        assert_eq!(jp.is_ordered, Some(true));
+        assert_eq!(address.is_ordered, Some(true));
     }
 
     #[test]
@@ -654,12 +628,11 @@ mod test {
         assert_eq!(components[3].value, "Vasiliev");
         let localizations = name.localizations.unwrap();
         let uk_cyrl = localizations.get("uk-Cyrl").unwrap();
-        let uk_cyrl = match uk_cyrl {
-            LocalizationObject::Replacement { name, .. } => name.as_ref(),
-            _ => panic!("Expected PatchObject"),
+        let name = match uk_cyrl.get("name") {
+            Some(LocalizationObject::Name(name)) => name,
+            e => panic!("{}", format!("Invalid type {:?}", e)),
         };
-        let uk_cyrl = uk_cyrl.as_ref().unwrap();
-        let components_uk_cyrl = uk_cyrl.components.as_ref().unwrap();
+        let components_uk_cyrl = name.components.as_ref().unwrap();
         assert_eq!(components_uk_cyrl.len(), 4);
         assert_eq!(components_uk_cyrl[0].kind, NameComponentKind::Title);
         assert_eq!(components_uk_cyrl[0].value, "г-н");
@@ -684,11 +657,11 @@ mod test {
         assert_eq!(t1.name, "novelist");
         let localizations = card.localizations.unwrap();
         let es = localizations.get("es").unwrap();
-        let title = match es {
-            LocalizationObject::PatchObject(patch) => patch.get("titles/t1/name").unwrap(),
-            _ => panic!("Expected PatchObject"),
+        let title = match es.get("titles/t1/name") {
+            Some(LocalizationObject::String(patch)) => patch,
+            e => panic!("{}", format!("Invalid type {:?}", e)),
         };
-        assert_eq!(title, &PatchingObject::String("escritor".to_string()));
+        assert_eq!(title, &"escritor".to_string());
     }
 
     #[test]
@@ -701,7 +674,7 @@ mod test {
         assert_eq!(k8.kind, AnniversaryKind::Birth);
         let date_k8 = match &k8.date {
             DateObject::PartialDate(date) => date,
-            _ => panic!("Expected PartialDate"),
+            e => panic!("{}", format!("Invalid type {:?}", e)),
         };
         assert_eq!(date_k8.year, Some(1953));
         assert_eq!(date_k8.month, Some(4));
@@ -710,7 +683,7 @@ mod test {
         assert_eq!(k9.kind, AnniversaryKind::Death);
         let date_k9 = match &k9.date {
             DateObject::Timestamp(date) => date,
-            _ => panic!("Expected Timestamp"),
+            e => panic!("{}", format!("Invalid type {:?}", e)),
         };
         assert_eq!(date_k9.utc, "2019-10-15T23:10:00Z");
         let place = k9.place.as_ref().unwrap();

@@ -209,12 +209,8 @@ impl Calendar {
         Self {
             #[cfg(feature = "typed")]
             calendar_type: Some(CalendarType::Calendar),
-            kind: None,
             uri: uri.to_string(),
-            media_type: None,
-            contexts: None,
-            pref: None,
-            label: None,
+            ..Resource::default().into()
         }
     }
 }
@@ -347,12 +343,8 @@ impl CryptoKey {
         Self {
             #[cfg(feature = "typed")]
             crypto_key_type: Some(CryptoKeyType::CryptoKey),
-            media_type: None,
             uri: uri.to_string(),
-            kind: None,
-            contexts: None,
-            pref: None,
-            label: None,
+            ..Resource::default().into()
         }
     }
 }
@@ -395,13 +387,8 @@ impl Directory {
         Self {
             #[cfg(feature = "typed")]
             directory_type: Some(DirectoryType::Directory),
-            kind: None,
             uri: uri.to_string(),
-            media_type: None,
-            contexts: None,
-            pref: None,
-            label: None,
-            list_as: None,
+            ..Resource::default().into()
         }
     }
 }
@@ -502,16 +489,14 @@ enum MediaType {
 
 impl Media {
     /// Creates a new Media object with the specified URI and kind.
+    /// Kind is mandatory on [`crate:Media`] struct
     pub fn new(uri: &str, kind: MediaKind) -> Self {
         Self {
             #[cfg(feature = "typed")]
             media_hidden_type: Some(MediaType::Media),
             kind,
             uri: uri.to_string(),
-            media_type: None,
-            contexts: None,
-            pref: None,
-            label: None,
+            ..Resource::default().into()
         }
     }
 }
@@ -576,7 +561,6 @@ impl Link {
         Self {
             #[cfg(feature = "typed")]
             link_type: Some(LinkType::Link),
-            kind: None,
             uri: uri.to_string(),
             ..Resource::default().into()
         }

@@ -14,13 +14,16 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// The Resource data type defines a resource associated with the entity represented by the Card
+/// Resource is exposed for utility purposes.
+/// It is used to define common properties for all resources.
+/// It is not intended to be used directly.
 #[derive(Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Resource {
     /// The JSContact type of the object.
     #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    pub resource_type: Option<ResourceType>,
+    resource_type: Option<ResourceType>,
     /// The kind of the resource.
     pub kind: Option<String>,
     /// The resource value.
@@ -35,10 +38,26 @@ pub struct Resource {
     pub label: Option<String>,
 }
 
+impl Resource {
+    /// Create a new Resource
+    pub fn new(uri: String) -> Self {
+        Self {
+            #[cfg(feature = "typed")]
+            resource_type: Some(ResourceType::Resource),
+            kind: None,
+            uri,
+            media_type: None,
+            contexts: None,
+            pref: None,
+            label: None,
+        }
+    }
+}
+
 /// Resource @type
 #[cfg(feature = "typed")]
 #[derive(Serialize, Deserialize, Debug)]
-pub enum ResourceType {
+enum ResourceType {
     /// Resource @type
     Resource,
 }

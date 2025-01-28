@@ -20,7 +20,7 @@ pub struct Resource {
     /// The JSContact type of the object.
     #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
-    pub ressource_type: Option<ResourceType>,
+    pub resource_type: Option<ResourceType>,
     /// The kind of the resource.
     pub kind: Option<String>,
     /// The resource value.

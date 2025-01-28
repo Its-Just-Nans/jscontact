@@ -17,7 +17,6 @@ use crate::{
 pub struct Card {
     /// The JSContact type of the Card object. Must be "Card".
     /// Not localized.
-    #[cfg(feature = "typed")]
     #[serde(rename = "@type")]
     card_type: String,
     /// The JSContact version of this Card.
@@ -144,7 +143,6 @@ impl Card {
     /// Creates a new Card object with the specified version and unique identifier.
     pub fn new(version: CardVersion, uid: &str) -> Self {
         Self {
-            #[cfg(feature = "typed")]
             card_type: "Card".to_string(),
             version,
             uid: uid.to_string(),

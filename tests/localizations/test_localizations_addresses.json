@@ -1,6 +1,17 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
+  "addresses": {
+    "k26": {
+      "components": [
+        {
+          "kind": "region",
+          "value": "reg"
+        }
+      ]
+    }
+  },
   "localizations": {
     "en": {
       "addresses": {
@@ -40,16 +51,6 @@
           "isOrdered": true
         }
       }
-    }
-  },
-  "addresses": {
-    "k26": {
-      "components": [
-        {
-          "value": "reg",
-          "kind": "region"
-        }
-      ]
     }
   }
 }

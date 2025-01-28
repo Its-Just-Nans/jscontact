@@ -6,7 +6,7 @@ mod test {
     };
 
     #[test]
-    fn test_localizations() {
+    fn test_localizations() -> Result<(), Box<dyn std::error::Error>> {
         let json = serde_json::json!({
             "@type": "Card",
             "version": "1.0",
@@ -46,12 +46,12 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations.json",
-            serde_json::to_string_pretty(&card).unwrap(),
-        )
-        .unwrap();
+            serde_json::to_string_pretty(&json)?,
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+
         let localizations = card.get_localized("en").unwrap();
         let titles = localizations.titles.unwrap();
         let t1 = titles.get("t1").unwrap();
@@ -81,10 +81,11 @@ mod test {
         assert_eq!(components[5].value, "2");
         assert_eq!(components[6].kind, AddressComponentKind::Postcode);
         assert_eq!(components[6].value, "〒100-8994");
+        Ok(())
     }
 
     #[test]
-    fn test_localizations_full_replacement_hashtable() {
+    fn test_localizations_full_replacement_hashtable() -> Result<(), Box<dyn std::error::Error>> {
         let json = serde_json::json!({
             "@type": "Card",
             "version": "1.0",
@@ -110,12 +111,12 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_full_replacement_hashtable.json",
-            serde_json::to_string_pretty(&card).unwrap(),
-        )
-        .unwrap();
+            serde_json::to_string_pretty(&json)?,
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+
         let localizations = card.get_localized("en").unwrap();
         let addresses = localizations.addresses.unwrap();
         let address = addresses.get("k25").unwrap();
@@ -135,6 +136,7 @@ mod test {
         assert_eq!(components[5].value, "Thailand");
         assert_eq!(components[6].kind, AddressComponentKind::Postcode);
         assert_eq!(components[6].value, "10110");
+        Ok(())
     }
 
     #[test]
@@ -154,16 +156,16 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_name.json",
-            serde_json::to_string_pretty(&card).unwrap(),
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+
         let localizations = card.get_localized("en")?;
         let name = localizations.name.unwrap();
         let fullname = name.full.unwrap();
         assert_eq!(fullname, "Okubo Masahito");
-
         Ok(())
     }
 
@@ -182,16 +184,16 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_name_path.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
+
         let localizations = card.get_localized("en")?;
         let name = localizations.name.unwrap();
         let fullname = name.full.unwrap();
         assert_eq!(fullname, "Okubo Masahito");
-
         Ok(())
     }
 
@@ -216,12 +218,12 @@ mod test {
                 }
             }
         });
-
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_name_components.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
+
         let localizations = card.get_localized("en")?;
         let name = localizations.name.unwrap();
         let components = name.components.as_ref().unwrap();
@@ -255,12 +257,12 @@ mod test {
                 }
             }
         });
-
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_name_components_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
+
         let localizations = card.get_localized("en")?;
         let name = localizations.name.unwrap();
         let components = name.components.as_ref().unwrap();
@@ -297,11 +299,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_titles.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let titles = localizations.titles.unwrap();
@@ -332,11 +334,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_titles_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let titles = localizations.titles.unwrap();
@@ -365,12 +367,11 @@ mod test {
                 }
             }
         });
-
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_titles_path_object_2.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let titles = localizations.titles.unwrap();
@@ -401,11 +402,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_nicknames.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let nicknames = localizations.nicknames.unwrap();
@@ -434,11 +435,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_nicknames_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let nicknames = localizations.nicknames.unwrap();
@@ -465,11 +466,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_nicknames_path_object_2.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let nicknames = localizations.nicknames.unwrap();
@@ -513,11 +514,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_addresses.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let addresses = localizations.addresses.unwrap();
@@ -576,11 +577,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_addresses_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let addresses = localizations.addresses.unwrap();
@@ -637,11 +638,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_addresses_path_object_2.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let addresses = localizations.addresses.unwrap();
@@ -717,11 +718,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_addresses_path_object_3.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let addresses = localizations.addresses.unwrap();
@@ -783,11 +784,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json)?;
         std::fs::write(
             "tests/localizations/test_localizations_addresses_path_object_4.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json)?;
 
         let localizations = card.get_localized("en")?;
         let addresses = localizations.addresses.unwrap();
@@ -859,11 +860,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_personal_info.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let personal_infos = localizations.personal_info.unwrap();
@@ -926,11 +927,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_personal_info_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let personal_infos = localizations.personal_info.unwrap();
@@ -994,11 +995,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_personal_info_path_object_2.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let personal_infos = localizations.personal_info.unwrap();
@@ -1056,11 +1057,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_personal_info_path_object_3.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let personal_infos = localizations.personal_info.unwrap();
@@ -1102,11 +1103,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_notes.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let notes = localizations.notes.unwrap();
@@ -1135,11 +1136,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_notes_path_object_1.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let notes = localizations.notes.unwrap();
@@ -1166,11 +1167,11 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_notes_path_object_2.json",
-            serde_json::to_string_pretty(&card)?,
+            serde_json::to_string_pretty(&json)?,
         )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en")?;
         let notes = localizations.notes.unwrap();
@@ -1181,7 +1182,7 @@ mod test {
     }
 
     #[test]
-    fn test_localizations_keywords() {
+    fn test_localizations_keywords() -> Result<(), Box<dyn std::error::Error>> {
         let json = serde_json::json!({
             "@type": "Card",
             "version": "1.0",
@@ -1197,16 +1198,16 @@ mod test {
                 }
             }
         });
-        let card: Card = serde_json::from_value(json).unwrap();
         std::fs::write(
             "tests/localizations/test_localizations_keywords.json",
-            serde_json::to_string_pretty(&card).unwrap(),
-        )
-        .unwrap();
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
 
         let localizations = card.get_localized("en").unwrap();
         let keywords = localizations.keywords.unwrap();
         let k1 = keywords.get("a_keyword").unwrap();
         assert_eq!(k1, &true);
+        Ok(())
     }
 }

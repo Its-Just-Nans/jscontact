@@ -2,16 +2,14 @@
   "@type": "Card",
   "version": "1.0",
   "uid": "1234",
-  "nicknames": {
-    "k391": {
-      "name": "Johnny"
+  "notes": {
+    "n1": {
+      "note": "This is a note."
     }
   },
   "localizations": {
     "en": {
-      "nicknames/k391": {
-        "name": "Steve"
-      }
+      "notes/n1/note": "This is a note in English."
     }
   }
 }

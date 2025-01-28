@@ -1,35 +1,36 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
-  "localizations": {
-    "en": {
-      "addresses/k26/components/2/kind": "district",
-      "addresses/k26/components/6/kind": "postcode",
-      "addresses/k26/components/6/value": "〒100-8994",
-      "addresses/k26/components/3/value": "2-7",
-      "addresses/k26/components/1/kind": "locality",
-      "addresses/k26/components/1/value": "千代田区",
-      "addresses/k26/components/0/value": "東京都",
-      "addresses/k26/components/4/kind": "separator",
-      "addresses/k26/components/5/kind": "number",
-      "addresses/k26/components/0/kind": "region",
-      "addresses/k26/components/2/value": "丸ノ内",
-      "addresses/k26/components/4/value": "-",
-      "addresses/k26/isOrdered": true,
-      "addresses/k26/defaultSeparator": "",
-      "addresses/k26/full": "〒100-8994東京都千代田区丸ノ内2-7-2",
-      "addresses/k26/components/5/value": "2",
-      "addresses/k26/components/3/kind": "block"
-    }
-  },
   "addresses": {
     "k26": {
       "components": [
         {
-          "value": "reg",
-          "kind": "region"
+          "kind": "region",
+          "value": "reg"
         }
       ]
+    }
+  },
+  "localizations": {
+    "en": {
+      "addresses/k26/components/0/kind": "region",
+      "addresses/k26/components/0/value": "東京都",
+      "addresses/k26/components/1/kind": "locality",
+      "addresses/k26/components/1/value": "千代田区",
+      "addresses/k26/components/2/kind": "district",
+      "addresses/k26/components/2/value": "丸ノ内",
+      "addresses/k26/components/3/kind": "block",
+      "addresses/k26/components/3/value": "2-7",
+      "addresses/k26/components/4/kind": "separator",
+      "addresses/k26/components/4/value": "-",
+      "addresses/k26/components/5/kind": "number",
+      "addresses/k26/components/5/value": "2",
+      "addresses/k26/components/6/kind": "postcode",
+      "addresses/k26/components/6/value": "〒100-8994",
+      "addresses/k26/defaultSeparator": "",
+      "addresses/k26/full": "〒100-8994東京都千代田区丸ノ内2-7-2",
+      "addresses/k26/isOrdered": true
     }
   }
 }

@@ -1,4 +1,5 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
   "titles": {
@@ -11,8 +12,8 @@
     "en": {
       "titles": {
         "t1": {
-          "kind": "role",
-          "name": "Mr."
+          "name": "Mr.",
+          "kind": "role"
         }
       }
     }

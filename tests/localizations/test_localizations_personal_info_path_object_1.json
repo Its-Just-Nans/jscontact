@@ -1,25 +1,7 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
-  "localizations": {
-    "en": {
-      "personalInfo/pi6": {
-        "kind": "interest",
-        "level": "medium",
-        "value": "r&b music"
-      },
-      "personalInfo/k26": {
-        "kind": "expertise",
-        "level": "high",
-        "value": "chemistry"
-      },
-      "personalInfo/pi1": {
-        "kind": "hobby",
-        "level": "high",
-        "value": "reading"
-      }
-    }
-  },
   "personalInfo": {
     "k26": {
       "kind": "expertise",
@@ -35,6 +17,25 @@
       "kind": "interest",
       "value": "musique r&b",
       "level": "medium"
+    }
+  },
+  "localizations": {
+    "en": {
+      "personalInfo/k26": {
+        "kind": "expertise",
+        "value": "chemistry",
+        "level": "high"
+      },
+      "personalInfo/pi1": {
+        "kind": "hobby",
+        "value": "reading",
+        "level": "high"
+      },
+      "personalInfo/pi6": {
+        "kind": "interest",
+        "value": "r&b music",
+        "level": "medium"
+      }
     }
   }
 }

@@ -1,8 +1,23 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
+  "addresses": {
+    "k26": {
+      "components": [
+        {
+          "kind": "region",
+          "value": "reg"
+        }
+      ]
+    }
+  },
   "localizations": {
     "en": {
+      "titles/t1": {
+        "@type": "Title",
+        "name": "Mr."
+      },
       "name/full": "Okubo Masahito",
       "nicknames/k391": {
         "@type": "Nickname",
@@ -42,21 +57,7 @@
         "defaultSeparator": "",
         "full": "〒100-8994東京都千代田区丸ノ内2-7-2",
         "isOrdered": true
-      },
-      "titles/t1": {
-        "@type": "Title",
-        "name": "Mr."
       }
-    }
-  },
-  "addresses": {
-    "k26": {
-      "components": [
-        {
-          "value": "reg",
-          "kind": "region"
-        }
-      ]
     }
   }
 }

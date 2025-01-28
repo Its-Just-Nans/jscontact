@@ -2,13 +2,13 @@
   "@type": "Card",
   "version": "1.0",
   "uid": "1234",
-  "name": {
-    "full": "Okubo Masahito Motohiro"
+  "keywords": {
+    "un_mot": true
   },
   "localizations": {
     "en": {
-      "name": {
-        "full": "Okubo Masahito"
+      "keywords": {
+        "a_keyword": true
       }
     }
   }

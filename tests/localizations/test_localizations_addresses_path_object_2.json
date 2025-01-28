@@ -1,11 +1,19 @@
 {
+  "@type": "Card",
   "version": "1.0",
   "uid": "1234",
+  "addresses": {
+    "k26": {
+      "components": [
+        {
+          "kind": "region",
+          "value": "reg"
+        }
+      ]
+    }
+  },
   "localizations": {
     "en": {
-      "addresses/k26/defaultSeparator": "",
-      "addresses/k26/full": "〒100-8994東京都千代田区丸ノ内2-7-2",
-      "addresses/k26/isOrdered": true,
       "addresses/k26/components": [
         {
           "kind": "region",
@@ -35,17 +43,10 @@
           "kind": "postcode",
           "value": "〒100-8994"
         }
-      ]
-    }
-  },
-  "addresses": {
-    "k26": {
-      "components": [
-        {
-          "value": "reg",
-          "kind": "region"
-        }
-      ]
+      ],
+      "addresses/k26/defaultSeparator": "",
+      "addresses/k26/full": "〒100-8994東京都千代田区丸ノ内2-7-2",
+      "addresses/k26/isOrdered": true
     }
   }
 }

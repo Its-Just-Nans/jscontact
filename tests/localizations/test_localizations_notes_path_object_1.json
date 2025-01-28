@@ -1,0 +1,17 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "notes": {
+    "n1": {
+      "note": "This is a note."
+    }
+  },
+  "localizations": {
+    "en": {
+      "notes/n1": {
+        "note": "This is a note in English."
+      }
+    }
+  }
+}

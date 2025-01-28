@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "uid": "1234",
+  "titles": {
+    "t1": {
+      "name": "Monsieur",
+      "kind": "role"
+    }
+  },
+  "localizations": {
+    "en": {
+      "titles/t1/name": "Mister",
+      "titles/t1/kind": "role"
+    }
+  }
+}

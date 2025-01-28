@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "uid": "1234",
+  "name": {
+    "full": "Okubo Masahito Motohiro"
+  },
+  "localizations": {
+    "en": {
+      "name": {
+        "full": "Okubo Masahito"
+      }
+    }
+  }
+}

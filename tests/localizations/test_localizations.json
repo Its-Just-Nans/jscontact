@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "uid": "1234",
+  "localizations": {
+    "en": {
+      "name/full": "Okubo Masahito",
+      "nicknames/k391": {
+        "@type": "Nickname",
+        "name": "Johnny"
+      },
+      "addresses/k26": {
+        "components": [
+          {
+            "kind": "region",
+            "value": "東京都"
+          },
+          {
+            "kind": "locality",
+            "value": "千代田区"
+          },
+          {
+            "kind": "district",
+            "value": "丸ノ内"
+          },
+          {
+            "kind": "block",
+            "value": "2-7"
+          },
+          {
+            "kind": "separator",
+            "value": "-"
+          },
+          {
+            "kind": "number",
+            "value": "2"
+          },
+          {
+            "kind": "postcode",
+            "value": "〒100-8994"
+          }
+        ],
+        "defaultSeparator": "",
+        "full": "〒100-8994東京都千代田区丸ノ内2-7-2",
+        "isOrdered": true
+      },
+      "titles/t1": {
+        "@type": "Title",
+        "name": "Mr."
+      }
+    }
+  },
+  "addresses": {
+    "k26": {
+      "components": [
+        {
+          "value": "reg",
+          "kind": "region"
+        }
+      ]
+    }
+  }
+}

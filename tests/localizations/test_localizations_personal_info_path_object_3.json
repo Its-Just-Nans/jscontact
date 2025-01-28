@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "uid": "1234",
+  "localizations": {
+    "en": {
+      "personalInfo/pi6/kind": "interest",
+      "personalInfo/k26/value": "chemistry",
+      "personalInfo/pi1/level": "high",
+      "personalInfo/pi6/value": "r&b music",
+      "personalInfo/pi1/kind": "hobby",
+      "personalInfo/pi1/value": "reading",
+      "personalInfo/k26/level": "high",
+      "personalInfo/k26/kind": "expertise",
+      "personalInfo/pi6/level": "medium"
+    }
+  },
+  "personalInfo": {
+    "k26": {
+      "kind": "expertise",
+      "value": "ch",
+      "level": "high"
+    },
+    "pi1": {
+      "kind": "hobby",
+      "value": "lire",
+      "level": "high"
+    },
+    "pi6": {
+      "kind": "interest",
+      "value": "musique r&b",
+      "level": "medium"
+    }
+  }
+}

@@ -18,7 +18,7 @@
 //! });
 //! let card = Card::from_value(json).unwrap();
 //!
-//! let str = card.to_string().unwrap();
+//! let str = card.serialize_str().unwrap();
 //!
 //! let card = Card::try_from_str(str).unwrap();
 //! ```

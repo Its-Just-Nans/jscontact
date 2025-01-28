@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "uid": "1234",
+  "nicknames": {
+    "k391": {
+      "name": "Johnny"
+    }
+  },
+  "localizations": {
+    "en": {
+      "nicknames/k391/name": "Steve"
+    }
+  }
+}

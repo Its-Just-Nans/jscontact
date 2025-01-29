@@ -669,8 +669,12 @@ mod test {
         Ok(())
     }
 
+    /// The card in the test is not valid as the RFC states
+    /// Because we cannot replace inexistent components
+    /// But we still handle it
     #[test]
-    fn test_localizations_addresses_path_object_3() -> Result<(), Box<dyn std::error::Error>> {
+    fn test_localizations_addresses_path_object_3_invalid() -> Result<(), Box<dyn std::error::Error>>
+    {
         let json = serde_json::json!({
             "@type": "Card",
             "version": "1.0",
@@ -719,7 +723,7 @@ mod test {
             }
         });
         std::fs::write(
-            "tests/localizations/test_localizations_addresses_path_object_3.json",
+            "tests/localizations/test_localizations_addresses_path_object_3_invalid.json",
             serde_json::to_string_pretty(&json)?,
         )?;
         let card: Card = serde_json::from_value(json)?;
@@ -749,8 +753,12 @@ mod test {
         Ok(())
     }
 
+    /// The card in the test is not valid as the RFC states
+    /// Because we cannot replace inexistent components
+    /// But we still handle it
     #[test]
-    fn test_localizations_addresses_path_object_4() -> Result<(), Box<dyn std::error::Error>> {
+    fn test_localizations_addresses_path_object_4_invalid() -> Result<(), Box<dyn std::error::Error>>
+    {
         let json = serde_json::json!({
             "@type": "Card",
             "version": "1.0",
@@ -785,7 +793,7 @@ mod test {
             }
         });
         std::fs::write(
-            "tests/localizations/test_localizations_addresses_path_object_4.json",
+            "tests/localizations/test_localizations_addresses_path_object_4_invalid.json",
             serde_json::to_string_pretty(&json)?,
         )?;
         let card: Card = serde_json::from_value(json)?;
@@ -1193,7 +1201,7 @@ mod test {
             "localizations": {
                 "en": {
                     "keywords": {
-                            "a_keyword": true
+                        "a_keyword": true
                     }
                 }
             }

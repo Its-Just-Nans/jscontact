@@ -1,8 +1,8 @@
 mod test {
 
     use jscontact::{
-        AddressComponentKind, Card, NameComponentKind, PersonalInfoKind, PersonalInfoLevel,
-        TitleKind,
+        AddressComponentKind, Card, DirectoryKind, LinkKind, MediaKind, NameComponentKind,
+        PersonalInfoKind, PersonalInfoLevel, TitleKind,
     };
 
     #[test]
@@ -1208,6 +1208,463 @@ mod test {
         let keywords = localizations.keywords.unwrap();
         let k1 = keywords.get("a_keyword").unwrap();
         assert_eq!(k1, &true);
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_media() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "media": {
+                "res45": {
+                    "kind": "sound",
+                    "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
+                },
+                "res47": {
+                    "kind": "logo",
+                    "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+                },
+                "res1": {
+                    "kind": "photo",
+                    "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "media": {
+                        "res45": {
+                            "kind": "sound",
+                            "uri": "CID:"
+                        },
+                        "res47": {
+                            "kind": "logo",
+                            "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+                        },
+                        "res1": {
+                            "kind": "photo",
+                            "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+                        }
+                    }
+                }
+            }
+        });
+
+        std::fs::write(
+            "tests/localizations/test_localizations_media.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let media = localized.media.unwrap();
+        let res45 = media.get("res45").unwrap();
+        assert_eq!(res45.kind, MediaKind::Sound);
+        assert_eq!(res45.uri, "CID:");
+        let res47 = media.get("res47").unwrap();
+        assert_eq!(res47.kind, MediaKind::Logo);
+        assert_eq!(res47.uri, "https://www.example.com/pub/logos/abccorp.jpg");
+        let res1 = media.get("res1").unwrap();
+        assert_eq!(res1.kind, MediaKind::Photo);
+        assert_eq!(
+            res1.uri,
+            "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_media_path_object_1() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "media": {
+                "res45": {
+                    "kind": "sound",
+                    "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
+                },
+                "res47": {
+                    "kind": "logo",
+                    "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+                },
+                "res1": {
+                    "kind": "photo",
+                    "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "media/res45": {
+                        "kind": "sound",
+                        "uri": "CID:"
+                    },
+                    "media/res47": {
+                        "kind": "logo",
+                        "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+                    },
+                    "media/res1": {
+                        "kind": "photo",
+                        "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+                    }
+                }
+            }
+        });
+
+        std::fs::write(
+            "tests/localizations/test_localizations_media_path_object_1.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let media = localized.media.unwrap();
+        let res45 = media.get("res45").unwrap();
+        assert_eq!(res45.kind, MediaKind::Sound);
+        assert_eq!(res45.uri, "CID:");
+        let res47 = media.get("res47").unwrap();
+        assert_eq!(res47.kind, MediaKind::Logo);
+        assert_eq!(res47.uri, "https://www.example.com/pub/logos/abccorp.jpg");
+        let res1 = media.get("res1").unwrap();
+        assert_eq!(res1.kind, MediaKind::Photo);
+        assert_eq!(
+            res1.uri,
+            "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_media_path_object_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "media": {
+                "res45": {
+                    "kind": "sound",
+                    "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
+                },
+                "res47": {
+                    "kind": "logo",
+                    "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+                },
+                "res1": {
+                    "kind": "photo",
+                    "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+                }
+            },
+            "localizations": {
+                "en": {
+                    "media/res45/kind": "sound",
+                    "media/res45/uri": "CID:",
+                    "media/res47/kind": "logo",
+                    "media/res47/uri": "https://www.example.com/pub/logos/abccorp.jpg",
+                    "media/res1/kind": "photo",
+                    "media/res1/uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+
+                }
+            }
+        });
+
+        std::fs::write(
+            "tests/localizations/test_localizations_media_path_object_2.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let media = localized.media.unwrap();
+        let res45 = media.get("res45").unwrap();
+        assert_eq!(res45.kind, MediaKind::Sound);
+        assert_eq!(res45.uri, "CID:");
+        let res47 = media.get("res47").unwrap();
+        assert_eq!(res47.kind, MediaKind::Logo);
+        assert_eq!(res47.uri, "https://www.example.com/pub/logos/abccorp.jpg");
+        let res1 = media.get("res1").unwrap();
+        assert_eq!(res1.kind, MediaKind::Photo);
+        assert_eq!(
+            res1.uri,
+            "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_links() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "links": {
+                "link3": {
+                    "kind": "contact",
+                    "uri": "mailto:contact@example.com",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "links": {
+                        "link3": {
+                            "kind": "contact",
+                            "uri": "mailto:",
+                            "pref": 1
+                        }
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_links.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let links = localized.links.unwrap();
+        let link3 = links.get("link3").unwrap();
+        assert_eq!(link3.kind, Some(LinkKind::Contact));
+        assert_eq!(link3.uri, "mailto:");
+        assert_eq!(link3.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_links_path_object_1() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "links": {
+                "link3": {
+                    "kind": "contact",
+                    "uri": "mailto:contact@example.com",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "links/link3": {
+                        "kind": "contact",
+                        "uri": "mailto:",
+                        "pref": 1
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_links_path_object_1.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let links = localized.links.unwrap();
+        let link3 = links.get("link3").unwrap();
+        assert_eq!(link3.kind, Some(LinkKind::Contact));
+        assert_eq!(link3.uri, "mailto:");
+        assert_eq!(link3.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_links_path_object_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "links": {
+                "link3": {
+                    "kind": "contact",
+                    "uri": "mailto:contact@example.com",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "links/link3/kind": "contact",
+                    "links/link3/uri": "mailto:",
+                    "links/link3/pref": 1
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_links_path_object_2.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let links = localized.links.unwrap();
+        let link3 = links.get("link3").unwrap();
+        assert_eq!(link3.kind, Some(LinkKind::Contact));
+        assert_eq!(link3.uri, "mailto:");
+        assert_eq!(link3.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_directory() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "directories": {
+                "dir1": {
+                    "kind": "entry",
+                    "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf",
+                    "label": "http",
+                    "listAs": 1,
+                },
+                "dir2": {
+                    "kind": "directory",
+                    "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+                    "pref": 1,
+                    "label": "LDAP Directory"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "directories": {
+                        "dir1": {
+                            "kind": "entry",
+                            "uri": "https://dir.example.com/other",
+                            "label": "http en",
+                            "listAs": 1,
+                        },
+                        "dir2": {
+                            "kind": "directory",
+                            "uri": "ldap://ldap.example/other_lang",
+                            "label": "ldap en",
+                            "pref": 1
+                        }
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_directory.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let directories = localized.directories.unwrap();
+        let dir1 = directories.get("dir1").unwrap();
+        assert_eq!(dir1.kind, Some(DirectoryKind::Entry));
+        assert_eq!(dir1.uri, "https://dir.example.com/other");
+        assert_eq!(dir1.label, Some("http en".to_string()));
+        assert_eq!(dir1.list_as, Some(1));
+        let dir2 = directories.get("dir2").unwrap();
+        assert_eq!(dir2.kind, Some(DirectoryKind::Directory));
+        assert_eq!(dir2.uri, "ldap://ldap.example/other_lang");
+        assert_eq!(dir2.label, Some("ldap en".to_string()));
+        assert_eq!(dir2.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_directory_path_object_1() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "directories": {
+                "dir1": {
+                    "kind": "entry",
+                    "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf",
+                    "label": "http",
+                    "listAs": 1,
+                },
+                "dir2": {
+                    "kind": "directory",
+                    "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+                    "pref": 1,
+                    "label": "LDAP Directory"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "directories/dir1": {
+                        "kind": "entry",
+                        "uri": "https://dir.example.com/other",
+                        "label": "http en",
+                        "listAs": 1,
+                    },
+                    "directories/dir2": {
+                        "kind": "directory",
+                        "uri": "ldap://ldap.example/other_lang",
+                        "label": "ldap en",
+                        "pref": 1
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_directory_path_object_1.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let directories = localized.directories.unwrap();
+        let dir1 = directories.get("dir1").unwrap();
+        assert_eq!(dir1.kind, Some(DirectoryKind::Entry));
+        assert_eq!(dir1.uri, "https://dir.example.com/other");
+        assert_eq!(dir1.label, Some("http en".to_string()));
+        assert_eq!(dir1.list_as, Some(1));
+        let dir2 = directories.get("dir2").unwrap();
+        assert_eq!(dir2.kind, Some(DirectoryKind::Directory));
+        assert_eq!(dir2.uri, "ldap://ldap.example/other_lang");
+        assert_eq!(dir2.label, Some("ldap en".to_string()));
+        assert_eq!(dir2.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_directory_path_object_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "directories": {
+                "dir1": {
+                    "kind": "entry",
+                    "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf",
+                    "label": "http",
+                    "listAs": 1,
+                },
+                "dir2": {
+                    "kind": "directory",
+                    "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+                    "pref": 1,
+                    "label": "LDAP Directory"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "directories/dir1/kind": "entry",
+                    "directories/dir1/uri": "https://dir.example.com/other",
+                    "directories/dir1/label": "http en",
+                    "directories/dir1/listAs": 1,
+                    "directories/dir2/kind": "directory",
+                    "directories/dir2/uri": "ldap://ldap.example/other_lang",
+                    "directories/dir2/label": "ldap en",
+                    "directories/dir2/pref": 1
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_directory_path_object_2.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let directories = localized.directories.unwrap();
+        let dir1 = directories.get("dir1").unwrap();
+        assert_eq!(dir1.kind, Some(DirectoryKind::Entry));
+        assert_eq!(dir1.uri, "https://dir.example.com/other");
+        assert_eq!(dir1.label, Some("http en".to_string()));
+        assert_eq!(dir1.list_as, Some(1));
+        let dir2 = directories.get("dir2").unwrap();
+        assert_eq!(dir2.kind, Some(DirectoryKind::Directory));
+        assert_eq!(dir2.uri, "ldap://ldap.example/other_lang");
+        assert_eq!(dir2.label, Some("ldap en".to_string()));
+        assert_eq!(dir2.pref, Some(1));
         Ok(())
     }
 }

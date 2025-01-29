@@ -1,0 +1,35 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "directories": {
+    "dir1": {
+      "kind": "entry",
+      "uri": "https://dir.example.com/addrbook/jdoe/Jean%20Dupont.vcf",
+      "label": "http",
+      "listAs": 1
+    },
+    "dir2": {
+      "kind": "directory",
+      "uri": "ldap://ldap.example/o=Example%20Tech,ou=Engineering",
+      "pref": 1,
+      "label": "LDAP Directory"
+    }
+  },
+  "localizations": {
+    "en": {
+      "directories/dir1": {
+        "kind": "entry",
+        "uri": "https://dir.example.com/other",
+        "label": "http en",
+        "listAs": 1
+      },
+      "directories/dir2": {
+        "kind": "directory",
+        "uri": "ldap://ldap.example/other_lang",
+        "label": "ldap en",
+        "pref": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "links": {
+    "link3": {
+      "kind": "contact",
+      "uri": "mailto:contact@example.com",
+      "pref": 1
+    }
+  },
+  "localizations": {
+    "en": {
+      "links/link3/kind": "contact",
+      "links/link3/uri": "mailto:",
+      "links/link3/pref": 1
+    }
+  }
+}

@@ -115,15 +115,15 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub crypto_keys: Option<HashMap<String, CryptoKey>>,
     /// The directories containing information about the entity represented by the Card.
-    /// Not localized.
+    /// Localized by [`localize_directories`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub directories: Option<HashMap<String, Directory>>,
     /// The links to resources that do not fit any of the other use-case-specific resource properties.
-    /// Not localized.
+    /// Localized by [`localize_links`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub links: Option<HashMap<String, Link>>,
     /// The media resources such as photographs, avatars, or sounds that are associated with the entity represented by the Card.
-    /// Not localized.
+    /// Localized by [`localize_media`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media: Option<HashMap<String, Media>>,
     /// The set of free-text keywords, also known as tags.
@@ -264,25 +264,34 @@ impl Card {
             None => return Ok(self.clone()),
         };
         // iter on localized_lang and set the values
-        let mut card = self.clone();
+        let mut localized_card = self.clone();
         for (key, value) in localized_lang.iter() {
+            // Deliberately not using jsonptr here
             if key.starts_with("name") {
-                localize_name(&mut card, key, value)?;
+                localize_name(&mut localized_card, key, value)?;
             } else if key.starts_with("titles") {
-                localize_titles(&mut card, key, value)?;
+                localize_titles(&mut localized_card, key, value)?;
             } else if key.starts_with("addresses") {
-                localize_addresses(&mut card, key, value)?;
+                localize_addresses(&mut localized_card, key, value)?;
             } else if key.starts_with("nicknames") {
-                localize_nicknames(&mut card, key, value)?;
+                localize_nicknames(&mut localized_card, key, value)?;
             } else if key.starts_with("personalInfo") {
-                localize_personal_info(&mut card, key, value)?;
+                localize_personal_info(&mut localized_card, key, value)?;
             } else if key.starts_with("notes") {
-                localize_notes(&mut card, key, value)?;
+                localize_notes(&mut localized_card, key, value)?;
             } else if key.starts_with("keywords") {
-                localize_keywords(&mut card, key, value)?;
+                localize_keywords(&mut localized_card, key, value)?;
+            } else if key.starts_with("media") {
+                localize_media(&mut localized_card, key, value)?;
+            } else if key.starts_with("links") {
+                localize_links(&mut localized_card, key, value)?;
+            } else if key.starts_with("directories") {
+                localize_directories(&mut localized_card, key, value)?;
             }
         }
-        Ok(card)
+        // remove localizations of the localized card
+        localized_card.localizations = None;
+        Ok(localized_card)
     }
 }
 
@@ -656,6 +665,205 @@ fn localize_keywords(card: &mut Card, key: &str, value: &Value) -> Result<(), St
     if key == "keywords" {
         card.keywords = serde_json::from_value(value.clone()).ok();
         return Ok(());
+    }
+    Ok(())
+}
+
+/// Localize the [`crate::Media`]
+fn localize_media(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "media" {
+        card.media = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let medias_hash_map = match &mut card.media {
+        Some(media) => media,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("media", "");
+    if key.is_empty() {
+        let Ok(media_map) = serde_json::from_value::<HashMap<String, Media>>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        *medias_hash_map = media_map;
+        card.media = Some(medias_hash_map.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid media key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(media_serde) = serde_json::from_value::<Media>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        medias_hash_map.insert(idx_key, media_serde);
+        card.media = Some(medias_hash_map.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(media) = medias_hash_map.get_mut(&idx_key) else {
+        return Err(format!("media key '{}' not found", idx_key));
+    };
+    if key == "type" {
+        let Ok(media_type) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        media.media_type = media_type;
+    } else if key == "uri" {
+        let Ok(uri) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        media.uri = uri;
+    } else if key == "contexts" {
+        let Ok(contexts_map) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        media.contexts = contexts_map;
+    } else if key == "pref" {
+        let Ok(pref) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        media.pref = pref;
+    } else if key == "label" {
+        let Ok(label) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        media.label = label;
+    }
+    card.media = Some(medias_hash_map.clone());
+    Ok(())
+}
+
+/// Localize the [`crate::Links`]
+fn localize_links(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "links" {
+        card.links = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let links = match &mut card.links {
+        Some(links) => links,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("links", "");
+    if key.is_empty() {
+        let Ok(links_map) = serde_json::from_value::<HashMap<String, Link>>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        *links = links_map;
+        card.links = Some(links.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid links key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(link) = serde_json::from_value::<Link>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        links.insert(idx_key, link);
+        card.links = Some(links.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(link) = links.get_mut(&idx_key) else {
+        return Err(format!("links key '{}' not found", idx_key));
+    };
+    if key == "uri" {
+        let Ok(uri) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        link.uri = uri;
+    } else if key == "contexts" {
+        let Ok(contexts_map) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        link.contexts = contexts_map;
+    } else if key == "pref" {
+        let Ok(pref) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        link.pref = pref;
+    } else if key == "label" {
+        let Ok(label) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        link.label = label;
+    }
+    Ok(())
+}
+
+/// Localize the [`crate::Directory`]
+fn localize_directories(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "directories" {
+        card.directories = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let directories = match &mut card.directories {
+        Some(directories) => directories,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("directories", "");
+    if key.is_empty() {
+        let Ok(directories_map) =
+            serde_json::from_value::<HashMap<String, Directory>>(value.clone())
+        else {
+            return Err("Invalid value".into());
+        };
+        *directories = directories_map;
+        card.directories = Some(directories.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid directories key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(directory) = serde_json::from_value::<Directory>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directories.insert(idx_key, directory);
+        card.directories = Some(directories.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(directory) = directories.get_mut(&idx_key) else {
+        return Err(format!("directories key '{}' not found", idx_key));
+    };
+    if key == "uri" {
+        let Ok(uri) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directory.uri = uri;
+    } else if key == "contexts" {
+        let Ok(contexts_map) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directory.contexts = contexts_map;
+    } else if key == "listAs" {
+        let Ok(list_as) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directory.list_as = list_as;
+    } else if key == "pref" {
+        let Ok(pref) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directory.pref = pref;
+    } else if key == "label" {
+        let Ok(label) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        directory.label = label;
     }
     Ok(())
 }

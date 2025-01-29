@@ -1,0 +1,29 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "media": {
+    "res45": {
+      "kind": "sound",
+      "uri": "CID:JOHNQ.part8.19960229T080000.xyzMail@example.com"
+    },
+    "res47": {
+      "kind": "logo",
+      "uri": "https://www.example.com/pub/logos/abccorp.jpg"
+    },
+    "res1": {
+      "kind": "photo",
+      "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+    }
+  },
+  "localizations": {
+    "en": {
+      "media/res45/kind": "sound",
+      "media/res45/uri": "CID:",
+      "media/res47/kind": "logo",
+      "media/res47/uri": "https://www.example.com/pub/logos/abccorp.jpg",
+      "media/res1/kind": "photo",
+      "media/res1/uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4..."
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "calendars": {
+    "calA": {
+      "kind": "calendar",
+      "uri": "webcal://calendar.example.com/calA.ics",
+      "label": "Calendar A"
+    },
+    "project-a": {
+      "kind": "freeBusy",
+      "uri": "https://calendar.example.com/busy/project-a",
+      "pref": 1
+    }
+  },
+  "localizations": {
+    "en": {
+      "calendars/calA": {
+        "kind": "calendar",
+        "uri": "webcal://calendar.example.com/en.ics"
+      },
+      "calendars/project-a": {
+        "kind": "freeBusy",
+        "uri": "https://busy.com",
+        "label": "Busy"
+      }
+    }
+  }
+}

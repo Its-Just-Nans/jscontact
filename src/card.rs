@@ -91,15 +91,16 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_languages: Option<HashMap<String, LanguagePref>>,
     /// The calendaring resources of the entity represented by the Card, such as to look up free-busy information.
-    /// Not localized.
+    /// Localized by [`localize_calendars`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub calendars: Option<HashMap<String, Calendar>>,
     /// The scheduling addresses by which the entity may receive calendar scheduling invitations.
-    /// Not localized.
+    /// Localized by [`localize_scheduling_addresses`]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduling_addresses: Option<HashMap<String, SchedulingAddress>>,
     /// Localizations provide language-specific alternatives for existing property values and SHOULD NOT add new properties.
-    /// Not localized.
+    /// Not localized
+    /// This is a special case, the localization is done by the [`crate::Card::get_localized`] method.
     #[serde(skip_serializing_if = "Option::is_none")]
     localizations: Option<HashMap<String, HashMap<String, Value>>>,
     /// The memorable dates and events for the entity represented by the Card.
@@ -287,10 +288,16 @@ impl Card {
                 localize_links(&mut localized_card, key, value)?;
             } else if key.starts_with("directories") {
                 localize_directories(&mut localized_card, key, value)?;
+            } else if key.starts_with("calendars") {
+                localize_calendars(&mut localized_card, key, value)?;
+            } else if key.starts_with("schedulingAddresses") {
+                localize_scheduling_addresses(&mut localized_card, key, value)?;
             }
         }
         // remove localizations of the localized card
         localized_card.localizations = None;
+        // set the language of the localized card
+        localized_card.language = Some(lang);
         Ok(localized_card)
     }
 }
@@ -864,6 +871,135 @@ fn localize_directories(card: &mut Card, key: &str, value: &Value) -> Result<(),
             return Err("Invalid value".into());
         };
         directory.label = label;
+    }
+    Ok(())
+}
+
+/// Localize the [`crate::Calendar`]
+fn localize_calendars(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "calendars" {
+        card.calendars = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let calendars = match &mut card.calendars {
+        Some(calendars) => calendars,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("calendars", "");
+    if key.is_empty() {
+        let Ok(calendars_map) = serde_json::from_value::<HashMap<String, Calendar>>(value.clone())
+        else {
+            return Err("Invalid value".into());
+        };
+        *calendars = calendars_map;
+        card.calendars = Some(calendars.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid calendars key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(calendar) = serde_json::from_value::<Calendar>(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        calendars.insert(idx_key, calendar);
+        card.calendars = Some(calendars.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(calendar) = calendars.get_mut(&idx_key) else {
+        return Err(format!("calendars key '{}' not found", idx_key));
+    };
+    println!("{:?}", key);
+    if key == "uri" {
+        let Ok(uri) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        calendar.uri = uri;
+    } else if key == "contexts" {
+        let Ok(contexts_map) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        calendar.contexts = contexts_map;
+    } else if key == "pref" {
+        let Ok(pref) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        calendar.pref = pref;
+    } else if key == "label" {
+        let Ok(label) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        calendar.label = label;
+    }
+    Ok(())
+}
+
+/// Localize the [`crate::SchedulingAddress`]
+fn localize_scheduling_addresses(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
+    if key == "schedulingAddresses" {
+        card.scheduling_addresses = serde_json::from_value(value.clone()).ok();
+        return Ok(());
+    }
+    let scheduling_addresses = match &mut card.scheduling_addresses {
+        Some(scheduling_addresses) => scheduling_addresses,
+        None => &mut HashMap::new(),
+    };
+    let key = key.replace("schedulingAddresses", "");
+    if key.is_empty() {
+        let Ok(scheduling_addresses_map) =
+            serde_json::from_value::<HashMap<String, SchedulingAddress>>(value.clone())
+        else {
+            return Err("Invalid value".into());
+        };
+        *scheduling_addresses = scheduling_addresses_map;
+        card.scheduling_addresses = Some(scheduling_addresses.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let keys = key.split("/").collect::<Vec<&str>>();
+    let Some(idx_key) = keys.first() else {
+        return Err("Invalid schedulingAddresses key".into());
+    };
+    let idx_key = idx_key.to_string();
+    let key = key.replace(&idx_key, "");
+    if key.is_empty() {
+        let Ok(scheduling_address) = serde_json::from_value::<SchedulingAddress>(value.clone())
+        else {
+            return Err("Invalid value".into());
+        };
+        scheduling_addresses.insert(idx_key, scheduling_address);
+        card.scheduling_addresses = Some(scheduling_addresses.clone());
+        return Ok(());
+    }
+    let key = remove_first(&key);
+    let Some(scheduling_address) = scheduling_addresses.get_mut(&idx_key) else {
+        return Err(format!("schedulingAddresses key '{}' not found", idx_key));
+    };
+    if key == "uri" {
+        let Ok(uri) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        scheduling_address.uri = uri;
+    } else if key == "contexts" {
+        let Ok(contexts_map) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        scheduling_address.contexts = contexts_map;
+    } else if key == "pref" {
+        let Ok(pref) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        scheduling_address.pref = pref
+    } else if key == "label" {
+        let Ok(label) = serde_json::from_value(value.clone()) else {
+            return Err("Invalid value".into());
+        };
+        scheduling_address.label = label;
     }
     Ok(())
 }

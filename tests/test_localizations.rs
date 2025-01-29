@@ -1,8 +1,8 @@
 mod test {
 
     use jscontact::{
-        AddressComponentKind, Card, DirectoryKind, LinkKind, MediaKind, NameComponentKind,
-        PersonalInfoKind, PersonalInfoLevel, TitleKind,
+        AddressComponentKind, CalendarKind, Card, DirectoryKind, LinkKind, MediaKind,
+        NameComponentKind, PersonalInfoKind, PersonalInfoLevel, TitleKind,
     };
 
     #[test]
@@ -1665,6 +1665,258 @@ mod test {
         assert_eq!(dir2.uri, "ldap://ldap.example/other_lang");
         assert_eq!(dir2.label, Some("ldap en".to_string()));
         assert_eq!(dir2.pref, Some(1));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_calendars() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "calendars": {
+                "calA": {
+                    "kind": "calendar",
+                    "uri": "webcal://calendar.example.com/calA.ics",
+                    "label": "Calendar A"
+                },
+                "project-a": {
+                    "kind": "freeBusy",
+                    "uri": "https://calendar.example.com/busy/project-a",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "calendars": {
+                        "calA": {
+                            "kind": "calendar",
+                            "uri": "webcal://calendar.example.com/en.ics",
+                        },
+                        "project-a": {
+                            "kind": "freeBusy",
+                            "uri": "https://busy.com",
+                            "label": "Busy"
+                        }
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_calendars.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let calendars = localized.calendars.unwrap();
+        let cal_a = calendars.get("calA").unwrap();
+        assert_eq!(cal_a.kind, Some(CalendarKind::Calendar));
+        assert_eq!(cal_a.uri, "webcal://calendar.example.com/en.ics");
+        assert_eq!(cal_a.label, None);
+        let project_a = calendars.get("project-a").unwrap();
+        assert_eq!(project_a.kind, Some(CalendarKind::FreeBusy));
+        assert_eq!(project_a.uri, "https://busy.com");
+        assert_eq!(project_a.label, Some("Busy".to_string()));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_calendars_path_object_1() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "calendars": {
+                "calA": {
+                    "kind": "calendar",
+                    "uri": "webcal://calendar.example.com/calA.ics",
+                    "label": "Calendar A"
+                },
+                "project-a": {
+                    "kind": "freeBusy",
+                    "uri": "https://calendar.example.com/busy/project-a",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "calendars/calA": {
+                        "kind": "calendar",
+                        "uri": "webcal://calendar.example.com/en.ics",
+                    },
+                    "calendars/project-a": {
+                        "kind": "freeBusy",
+                        "uri": "https://busy.com",
+                        "label": "Busy"
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_calendars_path_object_1.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let calendars = localized.calendars.unwrap();
+        let cal_a = calendars.get("calA").unwrap();
+        assert_eq!(cal_a.kind, Some(CalendarKind::Calendar));
+        assert_eq!(cal_a.uri, "webcal://calendar.example.com/en.ics");
+        assert_eq!(cal_a.label, None);
+        let project_a = calendars.get("project-a").unwrap();
+        assert_eq!(project_a.kind, Some(CalendarKind::FreeBusy));
+        assert_eq!(project_a.uri, "https://busy.com");
+        assert_eq!(project_a.label, Some("Busy".to_string()));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_calendars_path_object_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "calendars": {
+                "calA": {
+                    "kind": "calendar",
+                    "uri": "webcal://calendar.example.com/calA.ics",
+                    "label": "Calendar A"
+                },
+                "project-a": {
+                    "kind": "freeBusy",
+                    "uri": "https://calendar.example.com/busy/project-a",
+                    "pref": 1
+                }
+            },
+            "localizations": {
+                "en": {
+                    "calendars/calA/kind": "calendar",
+                    "calendars/calA/uri": "webcal://calendar.example.com/en.ics",
+                    "calendars/project-a/kind": "freeBusy",
+                    "calendars/project-a/uri": "https://busy.com",
+                    "calendars/project-a/label": "Busy"
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_calendars_path_object_2.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let calendars = localized.calendars.unwrap();
+        let cal_a = calendars.get("calA").unwrap();
+        assert_eq!(cal_a.kind, Some(CalendarKind::Calendar));
+        assert_eq!(cal_a.uri, "webcal://calendar.example.com/en.ics");
+        assert_eq!(cal_a.label, Some("Calendar A".to_string()));
+        let project_a = calendars.get("project-a").unwrap();
+        assert_eq!(project_a.kind, Some(CalendarKind::FreeBusy));
+        assert_eq!(project_a.uri, "https://busy.com");
+        assert_eq!(project_a.label, Some("Busy".to_string()));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_scheduling_addresses() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "schedulingAddresses": {
+                "sched1": {
+                    "uri": "mailto:janedoe@example.com",
+                    "label": "Jane Doe"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "schedulingAddresses": {
+                        "sched1": {
+                            "uri": "mailto:",
+                            "label": "Jane Doe english"
+                        }
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_scheduling_addresses.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let scheduling_addresses = localized.scheduling_addresses.unwrap();
+        let sched1 = scheduling_addresses.get("sched1").unwrap();
+        assert_eq!(sched1.uri, "mailto:");
+        assert_eq!(sched1.label, Some("Jane Doe english".to_string()));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_scheduling_addresses_path_object_1(
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "schedulingAddresses": {
+                "sched1": {
+                    "uri": "mailto:janedoe@example.com",
+                    "label": "Jane Doe"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "schedulingAddresses/sched1": {
+                        "uri": "mailto:",
+                        "label": "Jane Doe english"
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_scheduling_addresses_path_object_1.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let scheduling_addresses = localized.scheduling_addresses.unwrap();
+        let sched1 = scheduling_addresses.get("sched1").unwrap();
+        assert_eq!(sched1.uri, "mailto:");
+        assert_eq!(sched1.label, Some("Jane Doe english".to_string()));
+        Ok(())
+    }
+
+    #[test]
+    fn test_localizations_scheduling_addresses_path_object_2(
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "schedulingAddresses": {
+                "sched1": {
+                    "uri": "mailto:janedoe@example.com",
+                    "label": "Jane Doe"
+                }
+            },
+            "localizations": {
+                "en": {
+                    "schedulingAddresses/sched1/uri": "mailto:",
+                    "schedulingAddresses/sched1/label": "Jane Doe english"
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_scheduling_addresses_path_object_2.json",
+            serde_json::to_string_pretty(&json).unwrap(),
+        )?;
+        let card: Card = serde_json::from_value(json).unwrap();
+        let localized = card.get_localized("en").unwrap();
+        let scheduling_addresses = localized.scheduling_addresses.unwrap();
+        let sched1 = scheduling_addresses.get("sched1").unwrap();
+        assert_eq!(sched1.uri, "mailto:");
+        assert_eq!(sched1.label, Some("Jane Doe english".to_string()));
         Ok(())
     }
 }

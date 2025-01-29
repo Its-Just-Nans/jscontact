@@ -1,6 +1,6 @@
 //! The primary Card object as defined in RFC 9553
 
-use std::collections::HashMap;
+use std::{collections::HashMap, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -14,7 +14,7 @@ use crate::{
 use crate::{AddressComponent, AddressComponentKind, NameComponent};
 
 /// Represents the primary Card object as defined in RFC 9553, storing metadata and contact properties.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Card {
     /// The JSContact type of the Card object. Must be "Card".
@@ -183,36 +183,8 @@ impl Card {
     /// Wrapper around serde_json
     /// # Errors
     /// Will return an error if the input is not a valid Card object.
-    pub fn from_slice(json_slice: &[u8]) -> Result<Self, serde_json::Error> {
-        serde_json::from_slice(json_slice)
-    }
-
-    /// Wrapper around serde_json
-    /// # Errors
-    /// Will return an error if the input is not a valid Card object.
     pub fn from_reader<R: std::io::Read>(reader: R) -> Result<Self, serde_json::Error> {
         serde_json::from_reader(reader)
-    }
-
-    /// Wrapper around serde_json
-    /// # Errors
-    /// Will return an error if the input is not a valid Card object.
-    pub fn from_value(value: Value) -> Result<Self, serde_json::Error> {
-        serde_json::from_value(value)
-    }
-
-    /// Wrapper around serde_json
-    /// # Errors
-    /// Will return an error if the input is not a valid Card object.
-    pub fn try_from_str(json_string: String) -> Result<Self, serde_json::Error> {
-        serde_json::from_str(&json_string)
-    }
-
-    /// Wrapper around serde_json
-    /// # Errors
-    /// Will return an error if the input is not a valid Card object.
-    pub fn serialize_str(&self) -> Result<String, serde_json::Error> {
-        serde_json::to_string(self)
     }
 
     /// Creates a new Card object with the latest version and the specified unique identifier.
@@ -244,7 +216,7 @@ impl Card {
         };
     }
 
-    /// Get available languages in the Card object.
+    /// Get available languages from the [`Card::localizations`]
     pub fn get_available_languages(&self) -> Vec<String> {
         match &self.localizations {
             Some(localizations_map) => localizations_map.keys().cloned().collect(),
@@ -273,6 +245,39 @@ impl Card {
         localized_card.language = Some(lang);
         localize_card(&mut localized_card, localized_lang)?;
         Ok(localized_card)
+    }
+}
+
+impl FromStr for Card {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl TryFrom<&[u8]> for Card {
+    type Error = serde_json::Error;
+
+    fn try_from(slice: &[u8]) -> Result<Self, Self::Error> {
+        serde_json::from_slice(slice)
+    }
+}
+
+impl TryFrom<Value> for Card {
+    type Error = String;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        let card: Card = serde_json::from_value(value.clone()).map_err(|e| e.to_string())?;
+        Ok(card)
+    }
+}
+
+impl TryFrom<Card> for String {
+    type Error = serde_json::Error;
+
+    fn try_from(card: Card) -> Result<Self, Self::Error> {
+        serde_json::to_string(&card)
     }
 }
 

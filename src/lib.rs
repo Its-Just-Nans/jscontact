@@ -11,26 +11,54 @@
 //! use jscontact::Card;
 //! use serde_json;
 //!
-//! let json = serde_json::json!({
+//! let json_value = serde_json::json!({
 //!     "@type": "Card",
 //!     "version": "1.0",
 //!     "uid": "1234"
 //! });
-//! let card = Card::from_value(json).unwrap();
-//!
-//! let str = card.serialize_str().unwrap();
-//!
-//! let card = Card::try_from_str(str).unwrap();
+//! let card_deserialized: Card = Card::try_from(json_value).unwrap(); // deserialize from serde::Value
+//! let card_string: String = String::try_from(card_deserialized.clone()).unwrap(); // serialize to String
+//! let card: Card = card_string.parse().unwrap(); // deserialize with parse()
+//! assert_eq!(card_deserialized, card);
 //! ```
 //!
 //! Simple creation example:
 //! ```rust
-//! use jscontact::{Card, CardKind, Name, NameComponent, NameComponentKind};
+//! use jscontact::{Card, CardKind, CardVersion, Name, NameComponent, NameComponentKind};
 //! use serde_json;
 //!
-//! let mut card = Card::new_with_latest_version("my:uri");
+//! let mut card = Card::new(CardVersion::OneDotZero, "my:uri");
 //! card.kind = Some(CardKind::Individual);
-//! let json = serde_json::to_string(&card).unwrap();
+//! let json = serde_json::to_string(&card).unwrap(); // serialize with serde
+//! ```
+//!
+//! Get localized Card:
+//! ```rust
+//! use jscontact::{Card, CardVersion, Name};
+//! use std::collections::HashMap;
+//! use serde_json::Value;
+//!
+//! // create a card
+//! let mut card = Card::new(CardVersion::OneDotZero, "my:uri");
+//! let mut name = Name::default();
+//! name.full = Some("John".to_string());
+//! card.name = Some(name);
+//!
+//! // add localization
+//! let mut translations: HashMap<String, Value> = HashMap::new();
+//! let mut name_en = Name::default();
+//! name_en.full = Some("Johny".to_string());
+//! translations.insert(
+//!     "name".to_string(),
+//!     serde_json::to_value(name_en).expect("Failed to serialize name"),
+//! );
+//! card.add_localization("en", translations);
+//!
+//! // use localized card
+//! let langs = card.get_available_languages();
+//! assert_eq!(langs, vec!["en"]);
+//! let localized = card.get_localized(&langs[0]).unwrap();
+//! assert_eq!(localized.name.unwrap().full.unwrap(), "Johny");
 //! ```
 
 #![deny(

@@ -19,7 +19,7 @@ exclude = [
 
 [features]
 # The "typed" feature is enabled by default
-default = ["typed"]
+default = ["typed", "jsonptr"]
 
 # The typed feature enables the usage of the @type attributes in jscontact structs
 # This can be disabled with { default-features = false } in your Cargo.toml
@@ -30,10 +30,13 @@ default = ["typed"]
 # see tests/test_localizations.rs for an example
 typed = []
 
+jsonptr = ["dep:jsonptr"]
+
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+jsonptr = { version = "0.6.3", optional = true }
 
 [dev-dependencies]
 serde_json = { version = "1", features = ["preserve_order"] }

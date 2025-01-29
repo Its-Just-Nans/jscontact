@@ -22,3 +22,6 @@ jobs:
               run: cargo test --verbose  -- --test-threads=1
             - name: Run tests untyped
               run: cargo test --verbose --no-default-features -- --test-threads=1
+            - uses: taiki-e/install-action@cargo-hack
+            - name: Run hack tests
+              run: cargo hack test --feature-powerset --all-targets

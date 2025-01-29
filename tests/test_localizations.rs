@@ -238,6 +238,44 @@ mod test {
     }
 
     #[test]
+    fn test_localizations_name_components_2() -> Result<(), Box<dyn std::error::Error>> {
+        let json = serde_json::json!({
+            "@type": "Card",
+            "version": "1.0",
+            "uid": "1234",
+            "name": {
+                "full": "Okubo Masahito Motohiro"
+            },
+            "localizations": {
+                "en": {
+                    "name": {
+                        "components": [
+                            { "kind": "given", "value": "Masahito" },
+                            { "kind": "given2", "value": "Okubo" }
+                        ],
+                    }
+                }
+            }
+        });
+        std::fs::write(
+            "tests/localizations/test_localizations_name_components_2.json",
+            serde_json::to_string_pretty(&json)?,
+        )?;
+        let card: Card = serde_json::from_value(json)?;
+
+        let localizations = card.get_localized("en")?;
+        let name = localizations.name.unwrap();
+        let components = name.components.as_ref().unwrap();
+        assert_eq!(components.len(), 2);
+        assert_eq!(components[0].kind, NameComponentKind::Given);
+        assert_eq!(components[0].value, "Masahito");
+        assert_eq!(components[1].kind, NameComponentKind::Given2);
+        assert_eq!(components[1].value, "Okubo");
+        assert_eq!(name.full, None);
+        Ok(())
+    }
+
+    #[test]
     fn test_localizations_name_components_path_object_1() -> Result<(), Box<dyn std::error::Error>>
     {
         let json = serde_json::json!({
@@ -672,6 +710,7 @@ mod test {
     /// The card in the test is not valid as the RFC states
     /// Because we cannot replace inexistent components
     /// But we still handle it
+    #[cfg(not(feature = "jsonptr"))]
     #[test]
     fn test_localizations_addresses_path_object_3_invalid() -> Result<(), Box<dyn std::error::Error>>
     {
@@ -756,6 +795,7 @@ mod test {
     /// The card in the test is not valid as the RFC states
     /// Because we cannot replace inexistent components
     /// But we still handle it
+    #[cfg(not(feature = "jsonptr"))]
     #[test]
     fn test_localizations_addresses_path_object_4_invalid() -> Result<(), Box<dyn std::error::Error>>
     {

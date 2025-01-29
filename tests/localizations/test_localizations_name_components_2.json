@@ -1,0 +1,24 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "1234",
+  "name": {
+    "full": "Okubo Masahito Motohiro"
+  },
+  "localizations": {
+    "en": {
+      "name": {
+        "components": [
+          {
+            "kind": "given",
+            "value": "Masahito"
+          },
+          {
+            "kind": "given2",
+            "value": "Okubo"
+          }
+        ]
+      }
+    }
+  }
+}

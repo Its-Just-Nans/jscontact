@@ -6,11 +6,12 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::{
-    Address, AddressComponent, AddressComponentKind, Anniversary, Calendar, CardKind, CardVersion,
-    CryptoKey, Directory, EmailAddress, LanguagePref, Link, Media, Name, NameComponent, Nickname,
-    Note, OnlineService, Organization, PersonalInfo, Phone, Relation, SchedulingAddress, SpeakToAs,
-    Title,
+    Address, Anniversary, Calendar, CardKind, CardVersion, CryptoKey, Directory, EmailAddress,
+    LanguagePref, Link, Media, Name, Nickname, Note, OnlineService, Organization, PersonalInfo,
+    Phone, Relation, SchedulingAddress, SpeakToAs, Title,
 };
+#[cfg(not(feature = "jsonptr"))]
+use crate::{AddressComponent, AddressComponentKind, NameComponent};
 
 /// Represents the primary Card object as defined in RFC 9553, storing metadata and contact properties.
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -35,7 +36,7 @@ pub struct Card {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<CardKind>,
     /// The language used in the Card (e.g., en, fr).
-    /// Not localized.
+    /// Localized when using [`crate::Card::get_localized`] method.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub language: Option<String>,
     /// Members of a group Card, if applicable.
@@ -266,43 +267,80 @@ impl Card {
         };
         // iter on localized_lang and set the values
         let mut localized_card = self.clone();
-        for (key, value) in localized_lang.iter() {
-            // Deliberately not using jsonptr here
-            if key.starts_with("name") {
-                localize_name(&mut localized_card, key, value)?;
-            } else if key.starts_with("titles") {
-                localize_titles(&mut localized_card, key, value)?;
-            } else if key.starts_with("addresses") {
-                localize_addresses(&mut localized_card, key, value)?;
-            } else if key.starts_with("nicknames") {
-                localize_nicknames(&mut localized_card, key, value)?;
-            } else if key.starts_with("personalInfo") {
-                localize_personal_info(&mut localized_card, key, value)?;
-            } else if key.starts_with("notes") {
-                localize_notes(&mut localized_card, key, value)?;
-            } else if key.starts_with("keywords") {
-                localize_keywords(&mut localized_card, key, value)?;
-            } else if key.starts_with("media") {
-                localize_media(&mut localized_card, key, value)?;
-            } else if key.starts_with("links") {
-                localize_links(&mut localized_card, key, value)?;
-            } else if key.starts_with("directories") {
-                localize_directories(&mut localized_card, key, value)?;
-            } else if key.starts_with("calendars") {
-                localize_calendars(&mut localized_card, key, value)?;
-            } else if key.starts_with("schedulingAddresses") {
-                localize_scheduling_addresses(&mut localized_card, key, value)?;
-            }
-        }
         // remove localizations of the localized card
         localized_card.localizations = None;
         // set the language of the localized card
         localized_card.language = Some(lang);
+        localize_card(&mut localized_card, localized_lang)?;
         Ok(localized_card)
     }
 }
 
+/// Localize the Card object with jsonptr
+#[cfg(feature = "jsonptr")]
+fn localize_card(
+    localized_card: &mut Card,
+    localized_lang: &HashMap<String, Value>,
+) -> Result<(), String> {
+    use jsonptr::Pointer;
+    let Ok(mut card_value) = serde_json::to_value(&localized_card) else {
+        return Err("Failed to convert card to value".into());
+    };
+    for (key, value) in localized_lang.iter() {
+        let key = format!("/{}", key);
+        let ptr = match Pointer::parse(&key) {
+            Ok(ptr) => ptr,
+            Err(e) => return Err(format!("Failed to parse pointer: {}", e)),
+        };
+        match ptr.assign(&mut card_value, value.clone()) {
+            Ok(_) => (),
+            Err(e) => return Err(format!("Failed to assign value: {}", e)),
+        }
+    }
+    *localized_card = serde_json::from_value(card_value).unwrap();
+    Ok(())
+}
+
+/// Localize the Card object
+#[cfg(not(feature = "jsonptr"))]
+fn localize_card(
+    localized_card: &mut Card,
+    localized_lang: &HashMap<String, Value>,
+) -> Result<(), String> {
+    for (key, value) in localized_lang.iter() {
+        // Deliberately not using jsonptr here
+        if key.starts_with("name") {
+            localize_name(localized_card, key, value)?;
+        } else if key.starts_with("titles") {
+            localize_titles(localized_card, key, value)?;
+        } else if key.starts_with("addresses") {
+            localize_addresses(localized_card, key, value)?;
+        } else if key.starts_with("nicknames") {
+            localize_nicknames(localized_card, key, value)?;
+        } else if key.starts_with("personalInfo") {
+            localize_personal_info(localized_card, key, value)?;
+        } else if key.starts_with("notes") {
+            localize_notes(localized_card, key, value)?;
+        } else if key.starts_with("keywords") {
+            localize_keywords(localized_card, key, value)?;
+        } else if key.starts_with("media") {
+            localize_media(localized_card, key, value)?;
+        } else if key.starts_with("links") {
+            localize_links(localized_card, key, value)?;
+        } else if key.starts_with("directories") {
+            localize_directories(localized_card, key, value)?;
+        } else if key.starts_with("calendars") {
+            localize_calendars(localized_card, key, value)?;
+        } else if key.starts_with("schedulingAddresses") {
+            localize_scheduling_addresses(localized_card, key, value)?;
+        }
+    }
+    Ok(())
+}
+
 /// remove the first character of a string
+#[cfg(not(feature = "jsonptr"))]
+#[inline]
 fn remove_first(s: &str) -> &str {
     let mut chars = s.chars();
     chars.next();
@@ -310,6 +348,7 @@ fn remove_first(s: &str) -> &str {
 }
 
 /// Localize the [`crate::Name`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_name(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "name" {
         card.name = serde_json::from_value(value.clone()).ok();
@@ -323,6 +362,7 @@ fn localize_name(card: &mut Card, key: &str, value: &Value) -> Result<(), String
     if key.starts_with("components") {
         if key == "components" {
             curr_name.components = serde_json::from_value(value.clone()).ok();
+            card.name = Some(curr_name.clone());
             return Ok(());
         }
         let components = match &mut curr_name.components {
@@ -363,6 +403,7 @@ fn localize_name(card: &mut Card, key: &str, value: &Value) -> Result<(), String
 }
 
 /// Localize the [`crate::Titles`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_titles(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "titles" {
         card.titles = serde_json::from_value(value.clone()).ok();
@@ -410,6 +451,7 @@ fn localize_titles(card: &mut Card, key: &str, value: &Value) -> Result<(), Stri
 }
 
 /// Localize the [`crate::Addresses`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_addresses(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     let full_key = key;
     if key == "addresses" {
@@ -508,6 +550,7 @@ fn localize_addresses(card: &mut Card, key: &str, value: &Value) -> Result<(), S
 }
 
 /// Localize the [`crate::Nicknames`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_nicknames(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "nicknames" {
         card.nicknames = serde_json::from_value(value.clone()).ok();
@@ -558,6 +601,7 @@ fn localize_nicknames(card: &mut Card, key: &str, value: &Value) -> Result<(), S
 }
 
 /// Localize the [`crate::PersonalInfos`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_personal_info(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "personalInfo" {
         card.personal_info = serde_json::from_value(value.clone()).ok();
@@ -613,6 +657,7 @@ fn localize_personal_info(card: &mut Card, key: &str, value: &Value) -> Result<(
 }
 
 /// Localize the [`crate::Notes`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_notes(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "notes" {
         card.notes = serde_json::from_value(value.clone()).ok();
@@ -667,7 +712,8 @@ fn localize_notes(card: &mut Card, key: &str, value: &Value) -> Result<(), Strin
     Ok(())
 }
 
-/// Localize the [`crate::Keywords`]
+/// Localize the Keywords
+#[cfg(not(feature = "jsonptr"))]
 fn localize_keywords(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "keywords" {
         card.keywords = serde_json::from_value(value.clone()).ok();
@@ -677,6 +723,7 @@ fn localize_keywords(card: &mut Card, key: &str, value: &Value) -> Result<(), St
 }
 
 /// Localize the [`crate::Media`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_media(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "media" {
         card.media = serde_json::from_value(value.clone()).ok();
@@ -744,7 +791,8 @@ fn localize_media(card: &mut Card, key: &str, value: &Value) -> Result<(), Strin
     Ok(())
 }
 
-/// Localize the [`crate::Links`]
+/// Localize the Links
+#[cfg(not(feature = "jsonptr"))]
 fn localize_links(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "links" {
         card.links = serde_json::from_value(value.clone()).ok();
@@ -807,6 +855,7 @@ fn localize_links(card: &mut Card, key: &str, value: &Value) -> Result<(), Strin
 }
 
 /// Localize the [`crate::Directory`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_directories(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "directories" {
         card.directories = serde_json::from_value(value.clone()).ok();
@@ -876,6 +925,7 @@ fn localize_directories(card: &mut Card, key: &str, value: &Value) -> Result<(),
 }
 
 /// Localize the [`crate::Calendar`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_calendars(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "calendars" {
         card.calendars = serde_json::from_value(value.clone()).ok();
@@ -940,6 +990,7 @@ fn localize_calendars(card: &mut Card, key: &str, value: &Value) -> Result<(), S
 }
 
 /// Localize the [`crate::SchedulingAddress`]
+#[cfg(not(feature = "jsonptr"))]
 fn localize_scheduling_addresses(card: &mut Card, key: &str, value: &Value) -> Result<(), String> {
     if key == "schedulingAddresses" {
         card.scheduling_addresses = serde_json::from_value(value.clone()).ok();

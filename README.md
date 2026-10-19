@@ -4,6 +4,8 @@
 - <https://github.com/Its-Just-Nans/jscontact> - repository
 - <https://www.rfc-editor.org/rfc/rfc9553> - RFC 9553
 
+![jscontact](./jscontact.png)
+
 ## Tests
 
 ```sh
